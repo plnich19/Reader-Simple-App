@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
-import { wrap } from "module";
 
 export default function App() {
   return (
@@ -48,6 +47,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "black",
     padding: 5,
+    marginTop: 20,
     marginRight: 20
 
   },
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     marginRight: 40
   },
   menu2: {
-    marginTop: 20,
+    marginTop: 10,
     width: 40,
     height: 40,
     marginLeft: 20,
