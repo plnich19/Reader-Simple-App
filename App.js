@@ -9,8 +9,8 @@ export default function App() {
       <Navigation />
       <TrendingBar />
     </View>
+  );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
