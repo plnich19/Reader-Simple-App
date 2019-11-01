@@ -9,7 +9,8 @@ export default class Navigation extends Component {
                 source={require("../assets/src/readery.jpg")}
             />
             <Image style={styles.menu} source={require("../assets/src/menu.png")} />
-        </View>);
+        </View>
+        );
     }
 }
 
