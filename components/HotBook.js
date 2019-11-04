@@ -11,24 +11,28 @@ export default class HotBook extends Component {
                         <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
                         <View style={styles.detailtext}>
                             <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
+                            <Text style={styles.author}>Yuval Noah Harari</Text>
                         </View>
                     </View>
                     <View style={styles.detail}>
                         <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
                         <View style={styles.detailtext}>
                             <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
+                            <Text style={styles.author}>Yuval Noah Harari</Text>
                         </View>
                     </View>
                     <View style={styles.detail}>
                         <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
                         <View style={styles.detailtext}>
                             <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
+                            <Text style={styles.author}>Yuval Noah Harari</Text>
                         </View>
                     </View>
                     <View style={styles.detail}>
                         <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
                         <View style={styles.detailtext}>
                             <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
+                            <Text style={styles.author}>Yuval Noah Harari</Text>
                         </View>
                     </View>
                 </View>
@@ -68,5 +72,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold'
+    },
+    author: {
+        fontSize: 15,
+        textAlign: 'center'
     }
 });
