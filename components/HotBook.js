@@ -4,6 +4,9 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 export default class HotBook extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
             <View style={styles.hotbar}>

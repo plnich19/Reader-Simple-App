@@ -10,7 +10,7 @@ export default class HomeScreen extends Component {
             <ScrollView style={styles.container}>
                 <Navigation />
                 <TrendingBar />
-                <HotBook />
+                <HotBook navigation={this.props.navigation} />
             </ScrollView>
         );
     }

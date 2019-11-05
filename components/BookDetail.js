@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableHighlight, ScrollView } from "react-native";
-import Navigation from './components/Navigation.js';
-import TrendingBar from './components/TrendingBar.js';
+import { StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableHighlight } from "react-native";
+import Navigation from './Navigation.js';
+import TrendingBar from './TrendingBar.js';
 
 export default class BookDetail extends Component {
     constructor(props) {
@@ -19,20 +19,22 @@ export default class BookDetail extends Component {
                         <Text style={styles.Titleen}>Homo Deus: A Brief History of Tomorrow</Text>
                         <Text style={styles.author}>Yuval Noah Harari</Text>
                     </View>
-                    <Image style={styles.bookcover} Source={require('../assets/src/book1.jpg')}>
-                    </Image>
-                    <View style={styles.pricepanel}>
-                        <Text style={styles.price}>468.00 บาท</Text>
-                    //FORM INPUT FIELD
-                    //TouchableHighlight เพิ่มในรถเข็น
+                    <View style={styles.coverpanel}>
+                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}>
+                        </Image>
                     </View>
-                    <Text>'โฮโมดิอุสจากผู้เขียน 'เซเปียนส์''</Text>
+                    <View style={styles.pricepanel}>
+                        <View style={styles.pricetext}>
+                            <Text style={styles.price}>468.00</Text>
+                            <Text style={{ marginTop: 30 }}>บาท</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginBottom: 40, }}>
+                            <TextInput keyboardType='phone-pad' style={styles.amount} />
+                            <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.BookDesc2}>
-                    <Text>1234Desc</Text>
-                </View>
-            //ข้อมูลหนังสือ panel
-            </ScrollView>
+            </ScrollView >
         );
     }
 }
@@ -42,40 +44,89 @@ const styles = StyleSheet.create({
     },
     BookDesc1: {
         flexDirection: 'column',
-        backgroundColor: E8EEEE,
+        backgroundColor: '#FBFCFC',
     },
     BookDesc2: {
         backgroundColor: 'white',
     },
     Titlepanel: {
-        marginTop: 40
+        marginTop: 40,
+        marginBottom: 40
+    },
+    coverpanel: {
+        marginTop: 60
     },
     Titleth: {
         fontSize: 30,
-        marginLeft: 10,
-        marginRight: 10,
-        textAlign: 'center'
+        marginTop: 30,
+        marginLeft: 15,
+        marginRight: 15,
+        textAlign: 'left',
+        fontWeight: 'bold'
     },
     Titleen: {
-        fontSize: 25,
-        marginLeft: 10,
-        marginRight: 10,
-        textAlign: 'center'
+        fontSize: 20,
+        marginLeft: 15,
+        marginRight: 15,
+        textAlign: 'left',
+        fontWeight: 'bold'
+    },
+    author: {
+        color: 'red',
+        fontSize: 20,
+        marginLeft: 15,
+        marginRight: 15,
+        textAlign: 'left',
+        fontWeight: 'bold'
     },
     bookcover: {
-        width: 250,
-        height: 350,
-        marginTop: 100,
-        marginBottom: 100,
-        alignItems: 'center'
+        width: 300,
+        height: 500,
+        alignSelf: 'center',
+        marginLeft: 15,
+        marginRight: 15
     },
     pricepanel: {
+        width: 300,
         borderRadius: 4,
         borderWidth: 0.5,
-        borderColor: '#D0D8D8'
+        borderColor: '#D0D8D8',
+        marginTop: 40,
+        marginLeft: 15,
+        marginRight: 15,
+        alignSelf: 'center'
+    },
+    pricetext: {
+        flexDirection: 'row'
     },
     price: {
         fontSize: 29,
-        color: 'red'
+        color: 'red',
+        marginTop: 20,
+        marginRight: 10,
+        marginLeft: 10
+    },
+    amount: {
+        marginTop: 30,
+        marginLeft: 10,
+        width: 40,
+        height: 40,
+        borderRadius: 4,
+        borderWidth: 0.5,
+        borderColor: '#D0D8D8',
+    },
+    amountbutton: {
+        marginTop: 30,
+        marginLeft: 10,
+        backgroundColor: '#922B21',
+        height: 40,
+        justifyContent: 'center',
+    },
+    cartbuttontext: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        justifyContent: 'center',
+        width: 100
     }
 });

@@ -10,7 +10,7 @@ export default class Navigation extends Component {
     }
     renderTopMenu() {
         if (this.state.menuToggle) {
-            return <Text>STATEOK</Text>;
+            return;
         }
         else {
             return;
@@ -38,13 +38,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     logo: {
-        marginTop: 20,
+        marginTop: 5,
         marginLeft: 10,
         width: 200,
         height: 100
     },
     menu: {
-        marginTop: 20,
+        marginTop: 5,
         width: 20,
         height: 20,
         marginRight: 40
