@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 export default class HotBook extends Component {
     render() {
@@ -10,7 +12,7 @@ export default class HotBook extends Component {
                     <View style={styles.detail}>
                         <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
                         <View style={styles.detailtext}>
-                            <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
+                            <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
                         </View>
                     </View>
                     <View style={styles.detail}>

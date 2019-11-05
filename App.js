@@ -1,38 +1,28 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight, ScrollView } from "react-native";
-import Navigation from './components/Navigation.js';
-import TrendingBar from './components/TrendingBar.js';
-import HotBook from './components/HotBook.js';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import HomeScreen from './components/HomeScreen.js';
+import BookDetail from './components/BookDetail.js';
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen,
+  BookDetail: BookDetail
+},
+  {
+    initialRouteName: 'Home',
+  }
+);
+
+
+const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuToggle: false
-    }
-  }
-  renderTopMenu() {
-    if (this.state.menuToggle) {
-      return <Text>STATEOK</Text>;
-    }
-    else {
-      return;
-    }
-  }
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <Navigation />
-        {this.renderTopMenu()}
-        <TrendingBar />
-        <HotBook />
-      </ScrollView>
+      <AppContainer />
     );
   }
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-});
+
 

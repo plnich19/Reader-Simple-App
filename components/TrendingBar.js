@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 export default class TrendingBar extends Component {
     render() {

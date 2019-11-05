@@ -2,6 +2,20 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
 export default class Navigation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            menuToggle: false
+        }
+    }
+    renderTopMenu() {
+        if (this.state.menuToggle) {
+            return <Text>STATEOK</Text>;
+        }
+        else {
+            return;
+        }
+    }
     render() {
         return (<View style={styles.navigation}>
             <Image
@@ -9,7 +23,9 @@ export default class Navigation extends Component {
                 source={require("../assets/src/readery.jpg")}
             />
             <Image style={styles.menu} source={require("../assets/src/menu.png")} />
+            {this.renderTopMenu()}
         </View>
+
         );
     }
 }
