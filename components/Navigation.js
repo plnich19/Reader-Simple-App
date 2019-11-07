@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
+import Menu from "./Menu.js";
+import TrendingBar from "./TrendingBar.js";
 
 export default class Navigation extends Component {
     constructor(props) {
@@ -10,22 +12,35 @@ export default class Navigation extends Component {
     }
     renderTopMenu() {
         if (this.state.menuToggle) {
-            return;
+            return <Menu navigation={this.props.navigation} />;
         }
         else {
             return;
         }
     }
-    render() {
-        return (<View style={styles.navigation}>
-            <Image
-                style={styles.logo}
-                source={require("../assets/src/readery.jpg")}
-            />
-            <Image style={styles.menu} source={require("../assets/src/menu.png")} />
-            {this.renderTopMenu()}
-        </View>
+    toggle() {
+        const currentState = this.state.menuToggle;
+        this.setState({ menuToggle: !this.state.menuToggle });
+    }
 
+
+    render() {
+        return (
+            <View>
+                <View style={styles.navigation}>
+                    <Image
+                        style={styles.logo}
+                        source={require("../assets/src/readery.jpg")}
+                    />
+                    <TouchableHighlight onPress={() => this.toggle()}>
+                        <Image style={styles.menu}
+                            source={require("../assets/src/menu.png")} />
+                    </TouchableHighlight>
+                </View>
+                <View style={styles.navigation}>
+                    {this.renderTopMenu()}
+                </View>
+            </View>
         );
     }
 }

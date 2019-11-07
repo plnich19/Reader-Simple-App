@@ -8,8 +8,8 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                <Navigation />
-                <TrendingBar />
+                <Navigation navigation={this.props.navigation} />
+                {/* <TrendingBar /> */}
                 <HotBook navigation={this.props.navigation} />
             </ScrollView>
         );
