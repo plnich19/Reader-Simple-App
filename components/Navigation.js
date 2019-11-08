@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
+import { withNavigation } from 'react-navigation';
 import Menu from "./Menu.js";
-import TrendingBar from "./TrendingBar.js";
 
-export default class Navigation extends Component {
+class Navigation extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,10 +28,12 @@ export default class Navigation extends Component {
         return (
             <View>
                 <View style={styles.navigation}>
-                    <Image
-                        style={styles.logo}
-                        source={require("../assets/src/readery.jpg")}
-                    />
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('HomeScreen')}>
+                        <Image
+                            style={styles.logo}
+                            source={require("../assets/src/readery.jpg")}
+                        />
+                    </TouchableHighlight>
                     <TouchableHighlight onPress={() => this.toggle()}>
                         <Image style={styles.menu}
                             source={require("../assets/src/menu.png")} />
@@ -65,3 +67,5 @@ const styles = StyleSheet.create({
         marginRight: 40
     },
 });
+
+export default withNavigation(Navigation);
