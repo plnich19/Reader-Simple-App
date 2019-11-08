@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native"
 import { SearchBar } from 'react-native-elements';
 
 export default class Menu extends Component {
+    constructor(props) {
+        super(props);
+    }
     state = {
         search: '',
     };
@@ -18,14 +21,13 @@ export default class Menu extends Component {
                 containerStyle={{ backgroundColor: 'black' }}
                 placeholder="Search Here..."
                 onChangeText={this.updateSearch}
-                onPress={() => this.handleKeyPress()}
                 value={search}
             />
             <TouchableHighlight style={styles.loginbutton}>
                 <Text style={styles.loginbuttontext}>Search</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.loginbutton}>
-                <Text style={styles.loginbuttontext}>Log in</Text>
+            <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
+                <Text style={styles.loginbuttontext}>Log in/Sign up</Text>
             </TouchableHighlight>
         </View>);
     }

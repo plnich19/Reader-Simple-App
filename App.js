@@ -4,10 +4,12 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './components/HomeScreen.js';
 import BookDetail from './components/BookDetail.js';
+import Login from './components/Login.js';
 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
-  BookDetail: BookDetail
+  BookDetail: BookDetail,
+  Login: Login
 },
   {
     initialRouteName: 'Home',
