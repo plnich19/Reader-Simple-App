@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-paper";
+import { withNavigation } from 'react-navigation';
 import Navigation from './Navigation.js';
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
     }
@@ -109,3 +110,4 @@ const styles = StyleSheet.create({
         width: '100%'
     }
 });
+export default withNavigation(Login);
