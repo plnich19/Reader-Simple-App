@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { TextInput } from "react-native-paper";
 import Navigation from './Navigation.js';
 
 export default class Login extends Component {
@@ -20,22 +21,38 @@ export default class Login extends Component {
         const { username, password } = this.state;
         return (
             <ScrollView style={styles.loginpanel}>
+
                 <Navigation />
+
                 <Text style={styles.logintext}>Login/Sign up</Text>
                 <View style={styles.inputbar}>
-                    <Text style={styles.username}>Username/Email</Text>
                     <TextInput style={styles.input}
+                        label='Username'
                         onChangeText={this.updateUsername}
                         value={username}
-                        autoCompleteType='username'></TextInput>
-                    <Text style={styles.username}>Password</Text>
+                        mode='outlined'
+                        selectionColor='red'
+                        theme={{
+                            colors: {
+                                placeholder: 'black', text: 'black', primary: 'red',
+                                underlineColor: 'transparent', background: '#003489'
+                            }
+                        }}></TextInput>
                     <TextInput style={styles.input}
+                        label='Password'
                         onChangeText={this.updatePassword}
                         value={password}
-                        autoCompleteType='password'></TextInput>
-                    <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
+                        mode='outlined'
+                        selectionColor='red'
+                        theme={{
+                            colors: {
+                                placeholder: 'black', text: 'black', primary: 'red',
+                                underlineColor: 'transparent', background: '#003489'
+                            }
+                        }} ></TextInput>
+                    <TouchableOpacity style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
                         <Text style={styles.loginbuttontext}>Log in/Sign up</Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
 
             </ScrollView>
@@ -46,8 +63,6 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     loginpanel: {
         flex: 1,
-        flexDirection: "column",
-        flexWrap: 'wrap',
     },
     logintext: {
         marginTop: 50,
@@ -68,9 +83,9 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 10,
-        borderColor: 'black',
-        borderRadius: 4,
-        borderWidth: 0.5,
+        // borderColor: 'black',
+        // borderRadius: 4,
+        // borderWidth: 0.5,
         marginLeft: 40,
         marginRight: 40,
         height: 50,
@@ -81,15 +96,16 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 40,
         marginRight: 40,
-        backgroundColor: 'black'
+        backgroundColor: 'black',
+        height: 40,
+        justifyContent: 'center'
     },
     loginbuttontext: {
-
         color: 'white',
         fontSize: 15,
         fontWeight: 'bold',
         textAlign: 'center',
-        justifyContent: 'center',
+        alignSelf: 'center',
         width: '100%'
     }
 });
