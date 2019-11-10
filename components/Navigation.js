@@ -7,7 +7,8 @@ class Navigation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuToggle: false
+            menuToggle: false,
+            login: false
         }
     }
     renderTopMenu() {
@@ -23,12 +24,11 @@ class Navigation extends Component {
         this.setState({ menuToggle: !this.state.menuToggle });
     }
 
-
     render() {
         return (
             <View>
                 <View style={styles.navigation}>
-                    <TouchableHighlight onPress={() => this.props.navigation.navigate('HomeScreen')}>
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')}>
                         <Image
                             style={styles.logo}
                             source={require("../assets/src/readery.jpg")}
