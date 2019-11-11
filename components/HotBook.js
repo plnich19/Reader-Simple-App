@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
     bookpanel: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginLeft: 20
     },
     detail: {
-        marginRight: 25,
+        marginLeft: 20,
+        marginRight: 15,
         marginBottom: 25
     },
     detailtext: {
