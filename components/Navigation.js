@@ -8,9 +8,10 @@ class Navigation extends Component {
         super(props);
         this.state = {
             menuToggle: false,
-            login: false
         }
     }
+
+
     renderTopMenu() {
         if (this.state.menuToggle) {
             return <Menu navigation={this.props.navigation} />;

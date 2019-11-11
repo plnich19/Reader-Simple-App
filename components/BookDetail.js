@@ -12,7 +12,6 @@ export default class BookDetail extends Component {
         return (
             <ScrollView style={styles.container}>
                 <Navigation />
-                <TrendingBar />
                 <View style={styles.BookDesc1}>
                     <View style={styles.titlepanel}>
                         <Text style={styles.Titleth}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>

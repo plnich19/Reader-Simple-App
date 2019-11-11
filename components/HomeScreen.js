@@ -5,6 +5,7 @@ import TrendingBar from './TrendingBar.js';
 import HotBook from './HotBook.js';
 
 export default class HomeScreen extends Component {
+
     render() {
         return (
             <ScrollView style={styles.container}>

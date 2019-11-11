@@ -1,10 +1,73 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
 import { SearchBar } from 'react-native-elements';
+import * as firebase from 'firebase';
 
 export default class Menu extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            login: false
+        }
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+        this.listenForAuthChange = this.listenForAuthChange.bind(this);
+    }
+    listenForAuthChange() {
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("auth changed");
+            if (user) {
+                console.log("User details", user);
+                this.setState({ login: true });
+            } else {
+                console.log("no one is signed in ");
+                this.setState({
+                    name: "Anonymous"
+                });
+            }
+        });
+    }
+    componentDidMount() {
+        this.listenForAuthChange();
+    }
+
+    login() {
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(user => {
+                console.log("Login user successfully");
+                console.log(user);
+                this.setState({ modalVisible: false });
+            })
+            .catch(error => {
+                alert("An error occured: " + error.message);
+                console.log("An error occured", error.message);
+            });
+    }
+
+    // for lab: add logout function
+    logout() {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                console.log("Logout successfully");
+                alert("Logout Successfully");
+            })
+            .catch(error => {
+                alert("An error occured: " + error.message);
+                console.log("An error occured: " + error.message);
+            });
+    }
+
+    SignInToggle() {
+        if (this.state.login) {
+            return (<View><TouchableHighlight style={styles.loginbutton} onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableHighlight></View>)
+        }
+        else {
+            return (<TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}><Text style={styles.loginbuttontext}>Log in/Sign up</Text></TouchableHighlight>)
+        }
     }
     state = {
         search: '',
@@ -26,9 +89,10 @@ export default class Menu extends Component {
             <TouchableHighlight style={styles.loginbutton}>
                 <Text style={styles.loginbuttontext}>Search</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
+            {/* <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
                 <Text style={styles.loginbuttontext}>Log in/Sign up</Text>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
+            {this.SignInToggle()}
         </View>);
     }
 }
