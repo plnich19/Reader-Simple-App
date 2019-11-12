@@ -33,7 +33,8 @@ class Login extends Component {
             } else {
                 console.log("no one is signed in ");
                 this.setState({
-                    name: "Anonymous"
+                    name: "Anonymous",
+                    login: false
                 });
             }
         });

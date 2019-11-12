@@ -22,7 +22,8 @@ export default class Menu extends Component {
             } else {
                 console.log("no one is signed in ");
                 this.setState({
-                    name: "Anonymous"
+                    name: "Anonymous",
+                    login: false
                 });
             }
         });
@@ -54,6 +55,7 @@ export default class Menu extends Component {
             .then(() => {
                 console.log("Logout successfully");
                 alert("Logout Successfully");
+                this.setState({ login: false })
                 this.redirect();
             })
             .catch(error => {
@@ -64,12 +66,14 @@ export default class Menu extends Component {
 
     redirect() {
         const { navigate } = this.props.navigation;
-        navigate('After')
+        navigate('Home')
     }
 
     SignInToggle() {
         if (this.state.login) {
-            return (<View><TouchableHighlight style={styles.loginbutton} onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableHighlight></View>)
+            return (<View>
+                <TouchableHighlight style={styles.loginbutton}><Text style={styles.loginbuttontext}>My Cart</Text></TouchableHighlight>
+                <TouchableHighlight style={styles.loginbutton} onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableHighlight></View>)
         }
         else {
             return (<TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}><Text style={styles.loginbuttontext}>Log in/Sign up</Text></TouchableHighlight>)
