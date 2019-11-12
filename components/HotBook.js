@@ -27,10 +27,10 @@ export default class HotBook extends Component {
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {
                 books.push(<View key={key} style={styles.detail}>
-                    <Image style={styles.bookcover} source={this.state.books[key].cover}></Image>
+                    <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].nameth}</Text>
-                        <Text style={styles.author}>{this.state.books[key].author}}</Text>
+                        <Text style={styles.author}>{this.state.books[key].author}</Text>
                     </View>
                 </View>)
             })
@@ -77,12 +77,14 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     title: {
-        fontSize: 20,
+        fontSize: 16,
         textAlign: 'center',
         fontWeight: 'bold'
     },
     author: {
-        fontSize: 15,
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'grey',
         textAlign: 'center'
     }
 });

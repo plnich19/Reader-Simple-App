@@ -1,11 +1,28 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableHighlight } from "react-native";
 import Navigation from './Navigation.js';
-import TrendingBar from './TrendingBar.js';
+import * as firebase from 'firebase';
+import _ from 'lodash';
+import config from '../firebase/config.js';
 
 export default class BookDetail extends Component {
     constructor(props) {
         super(props);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
+        this.state = {
+            books: []
+        }
+    }
+
+    componentWillMount() {
+        const { params } = this.props.navigation.state;
+        const key = params ? params.key : null;
+        firebase.database().ref('books/' + key).once('value', (snap) => {
+            this.setState({ books: snap.val() })
+        })
+        console.log("state" + this.state.books);
     }
 
     render() {
@@ -14,17 +31,17 @@ export default class BookDetail extends Component {
                 <Navigation />
                 <View style={styles.BookDesc1}>
                     <View style={styles.titlepanel}>
-                        <Text style={styles.Titleth}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
-                        <Text style={styles.Titleen}>Homo Deus: A Brief History of Tomorrow</Text>
-                        <Text style={styles.author}>Yuval Noah Harari</Text>
+                        <Text style={styles.Titleth}>{this.state.books.nameth}</Text>
+                        <Text style={styles.Titleen}>{this.state.books.nameen}</Text>
+                        <Text style={styles.author}>{this.state.books.author}</Text>
                     </View>
                     <View style={styles.coverpanel}>
-                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}>
+                        <Image style={styles.bookcover} source={{ uri: this.state.books.cover }}>
                         </Image>
                     </View>
                     <View style={styles.pricepanel}>
                         <View style={styles.pricetext}>
-                            <Text style={styles.price}>468.00</Text>
+                            <Text style={styles.price}>{this.state.books.price}</Text>
                             <Text style={{ marginTop: 30 }}>บาท</Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 40, }}>
