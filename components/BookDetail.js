@@ -48,6 +48,14 @@ export default class BookDetail extends Component {
                             <TextInput keyboardType='phone-pad' style={styles.amount} />
                             <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight>
                         </View>
+                        <View style={styles.pricetext}>
+                            <Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 40 }}>จำนวนของที่มี : </Text>
+                            <Text style={{ marginTop: 12, color: 'red', fontWeight: 'bold', marginBottom: 40 }}>{this.state.books.stock}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.other}>
+                        <Text style={styles.othertext}>Other Information</Text>
+                        <Text style={styles.isbn}>ISBN : {this.state.books.isbn}</Text>
                     </View>
                 </View>
             </ScrollView >
@@ -144,5 +152,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         width: 100
+    },
+    other: {
+        marginTop: 90,
+        backgroundColor: '#EBEDEF'
+
+    },
+    othertext: {
+        marginTop: 20,
+        marginLeft: 15,
+        marginBottom: 20,
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    isbn: {
+        marginBottom: 20,
+        marginLeft: 15,
+        fontSize: 15
     }
 });
