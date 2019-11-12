@@ -32,7 +32,7 @@ class Navigation extends Component {
                     <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')}>
                         <Image
                             style={styles.logo}
-                            source={require("../assets/src/readery.jpg")}
+                            source={require("../assets/src/booklogo3.png")}
                         />
                     </TouchableHighlight>
                     <TouchableHighlight onPress={() => this.toggle()}>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     logo: {
-        marginTop: 5,
+        marginTop: 0,
         marginLeft: 10,
         width: 200,
         height: 100
