@@ -5,6 +5,7 @@ import { withNavigation } from 'react-navigation';
 import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import auth from '../firebase';
+import Menu from "./Menu.js";
 
 class Login extends Component {
     constructor(props) {
@@ -62,14 +63,23 @@ class Login extends Component {
             .then(user => {
                 console.log("Login user successfully");
                 console.log(user);
-                this.setState({ login: true });
                 console.log(this.state.login)
+                this.redirect()
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
                 console.log("An error occured", error.message);
             });
     }
+
+    redirect() {
+        const { navigate } = this.props.navigation;
+        alert('Welcome! ' + this.state.email)
+        navigate('Home')
+    }
+    forceUpdateHandler() {
+        this.forceUpdate();
+    };
 
     // for lab: add logout function
     logout() {

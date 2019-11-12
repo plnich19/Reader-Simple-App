@@ -5,11 +5,13 @@ import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './components/HomeScreen.js';
 import BookDetail from './components/BookDetail.js';
 import Login from './components/Login.js';
+import AfterLogout from './components/AfterLogout.js'
 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
   BookDetail: BookDetail,
-  Login: Login
+  Login: Login,
+  After: AfterLogout
 },
   {
     initialRouteName: 'Home',

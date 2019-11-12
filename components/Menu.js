@@ -54,11 +54,17 @@ export default class Menu extends Component {
             .then(() => {
                 console.log("Logout successfully");
                 alert("Logout Successfully");
+                this.redirect();
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
                 console.log("An error occured: " + error.message);
             });
+    }
+
+    redirect() {
+        const { navigate } = this.props.navigation;
+        navigate('After')
     }
 
     SignInToggle() {
