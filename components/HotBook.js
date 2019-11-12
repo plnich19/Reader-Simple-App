@@ -1,48 +1,51 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import * as firebase from 'firebase';
+import _ from 'lodash';
+import config from '../firebase/config.js';
 
 export default class HotBook extends Component {
     constructor(props) {
         super(props);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
+        this.state = {
+            books: []
+        }
+    }
+
+    componentWillMount() {
+        firebase.database().ref('books/').once('value', (snap) => {
+            this.setState({ books: snap.val() })
+        })
+        console.log("state" + this.state.books);
+    }
+    renderBooks() {
+
+        let books = [];
+        if (this.state.books) {
+            Object.keys(this.state.books).map((key, index) => {
+                books.push(<View key={key} style={styles.detail}>
+                    <Image style={styles.bookcover} source={this.state.books[key].cover}></Image>
+                    <View style={styles.detailtext}>
+                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].nameth}</Text>
+                        <Text style={styles.author}>{this.state.books[key].author}}</Text>
+                    </View>
+                </View>)
+            })
+            return books;
+        }
     }
     render() {
         return (
             <View style={styles.hotbar}>
                 <Text style={styles.choicename}>So Hot Right Now</Text>
                 <View style={styles.bookpanel}>
-                    <View style={styles.detail}>
-                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
-                        <View style={styles.detailtext}>
-                            <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
-                            <Text style={styles.author}>Yuval Noah Harari</Text>
-                        </View>
-                    </View>
-                    <View style={styles.detail}>
-                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
-                        <View style={styles.detailtext}>
-                            <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
-                            <Text style={styles.author}>Yuval Noah Harari</Text>
-                        </View>
-                    </View>
-                    <View style={styles.detail}>
-                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
-                        <View style={styles.detailtext}>
-                            <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
-                            <Text style={styles.author}>Yuval Noah Harari</Text>
-                        </View>
-                    </View>
-                    <View style={styles.detail}>
-                        <Image style={styles.bookcover} source={require('../assets/src/book1.jpg')}></Image>
-                        <View style={styles.detailtext}>
-                            <Text style={styles.title}>โฮโมดีอุส: ประวัติย่อของวันพรุ่งนี้</Text>
-                            <Text style={styles.author}>Yuval Noah Harari</Text>
-                        </View>
-                    </View>
+                    {this.renderBooks()}
                 </View>
             </View>
-        );
+        )
     }
 }
 
