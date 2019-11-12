@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput, HelperText } from "react-native-paper";
 import { withNavigation } from 'react-navigation';
 import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
@@ -127,6 +127,13 @@ class Login extends Component {
                                     underlineColor: 'transparent', background: '#003489'
                                 }
                             }}></TextInput>
+                        <HelperText
+                            style={{ marginLeft: 28, marginTop: 5 }}
+                            type="error"
+                            visible={this.state.email != "" && !this.state.email.includes('@')}
+                        >
+                            Please type correct form of email (@)
+                         </HelperText>
                         <TextInput style={styles.input}
                             label='Password'
                             secureTextEntry={true}
