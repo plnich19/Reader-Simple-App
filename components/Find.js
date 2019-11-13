@@ -1,31 +1,28 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
-import * as firebase from 'firebase';
 import _ from 'lodash';
-import config from '../firebase/config.js';
 
-export default class HotBook extends Component {
+export default class Find extends Component {
     constructor(props) {
         super(props);
-        if (!firebase.apps.length) {
-            firebase.initializeApp(config);
-        }
         this.state = {
             books: [],
         }
     }
+
+
     componentWillMount() {
-        firebase.database().ref('books/').once('value', (snap) => {
-            this.setState({ books: snap.val() })
-        })
+        const { params } = this.props.navigation.state;
+
+        this.setState({ books: params.books })
+
         console.log("state" + this.state.books);
     }
     renderBooks() {
-
-        let books = [];
+        let panel = [];
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {
-                books.push(<View key={key} style={styles.detail}>
+                panel.push(<View key={key} style={styles.detail}>
                     <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].nameth}</Text>
@@ -33,14 +30,14 @@ export default class HotBook extends Component {
                     </View>
                 </View>)
             })
-            return books;
+            return panel;
         }
     }
 
     render() {
         return (
             <View style={styles.hotbar}>
-                <Text style={styles.choicename}>So Hot Right Now</Text>
+                <Text style={styles.choicename}>Hooray! Found your book!</Text>
                 <View style={styles.bookpanel}>
                     {this.renderBooks()}
                 </View>
@@ -79,8 +76,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         textAlign: 'center',
-        fontWeight: 'bold',
-        color: 'black'
+        fontWeight: 'bold'
     },
     author: {
         fontSize: 14,

@@ -6,12 +6,13 @@ import HomeScreen from './components/HomeScreen.js';
 import BookDetail from './components/BookDetail.js';
 import Login from './components/Login.js';
 import AfterLogout from './components/AfterLogout.js'
+import Find from './components/Find.js';
 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
   BookDetail: BookDetail,
   Login: Login,
-  After: AfterLogout
+  Find: Find
 },
   {
     initialRouteName: 'Home',
