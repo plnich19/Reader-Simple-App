@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableHighlight, ScrollView } from "r
 import Navigation from './Navigation.js';
 import TrendingBar from './TrendingBar.js';
 import HotBook from './HotBook.js';
-import Find from './Find.js';
+import FindScreen from './FindScreen.js';
 
 export default class HomeScreen extends Component {
     render() {

@@ -1,26 +1,27 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { withNavigation } from 'react-navigation';
 import _ from 'lodash';
+import Navigation from './Navigation.js';
 
-export default class Find extends Component {
+class FindScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            books: [],
+            books: null,
         }
     }
-
 
     componentWillMount() {
         const { params } = this.props.navigation.state;
 
         this.setState({ books: params.books })
 
-        console.log("state" + this.state.books);
+        console.log(this.state.books);
     }
     renderBooks() {
         let panel = [];
-        if (this.state.books) {
+        if (this.state.books != null) {
             Object.keys(this.state.books).map((key, index) => {
                 panel.push(<View key={key} style={styles.detail}>
                     <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
@@ -32,11 +33,14 @@ export default class Find extends Component {
             })
             return panel;
         }
+        return (<Text>No more data</Text>)
     }
+
 
     render() {
         return (
             <View style={styles.hotbar}>
+                <Navigation />
                 <Text style={styles.choicename}>Hooray! Found your book!</Text>
                 <View style={styles.bookpanel}>
                     {this.renderBooks()}
@@ -85,3 +89,5 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
+
+export default withNavigation(FindScreen);
