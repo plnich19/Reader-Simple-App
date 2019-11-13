@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
 import { SearchBar } from 'react-native-elements';
 import * as firebase from 'firebase';
+import API from '../API.js';
 
 export default class Menu extends Component {
     constructor(props) {
@@ -56,7 +57,6 @@ export default class Menu extends Component {
                 console.log("Logout successfully");
                 alert("Logout Successfully");
                 this.setState({ login: false })
-                this.redirect();
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
@@ -64,9 +64,12 @@ export default class Menu extends Component {
             });
     }
 
-    redirect() {
+    redirect(books) {
+        console.log("bookhe", books);
         const { navigate } = this.props.navigation;
-        navigate('Home')
+        navigate('Find', {
+            books: books
+        })
     }
 
     SignInToggle() {
@@ -81,13 +84,29 @@ export default class Menu extends Component {
     }
     state = {
         search: '',
+        books: [],
+        ifSearch: false
     };
     updateSearch = search => {
         this.setState({ search });
     };
 
+    findBook = async () => {
+        if (this.state.search !== '') {
+            await API(this.state.search).then((data) => {
+                this.setState({ books: data, ifSearch: true })
+                this.redirect(data);
+                console.log("ชื่อนี่", this.state.books)
+            })
+        }
+    }
+
     render() {
-        const { search } = this.state;
+        const { search, ifSearch, books } = this.state;
+        if (ifSearch) {
+            this.setState({ ifSearch: false })
+            //this.redirect(books);
+        }
         return (<View style={styles.menupanel}>
             <SearchBar
                 keyboardType='default'
@@ -96,7 +115,7 @@ export default class Menu extends Component {
                 onChangeText={this.updateSearch}
                 value={search}
             />
-            <TouchableHighlight style={styles.loginbutton}>
+            <TouchableHighlight style={styles.loginbutton} onPress={() => this.findBook()}>
                 <Text style={styles.loginbuttontext}>Search</Text>
             </TouchableHighlight>
             {/* <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
@@ -104,6 +123,7 @@ export default class Menu extends Component {
             </TouchableHighlight> */}
             {this.SignInToggle()}
         </View>);
+
     }
 }
 
