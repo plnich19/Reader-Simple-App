@@ -19,18 +19,22 @@ export default class Find extends Component {
     // }
     renderBooks(isbn) {
         //const { books } = this.state.books;
+        if (isbn.length == 0) {
+            return (<Text style={styles.choicename}>Sorry :(</Text>);
+        }
         let panel = [];
         isbn.forEach((isbnnum) => {
             console.log(isbnnum);
             console.log(typeof (isbnnum));
 
-            panel.push(<View style={styles.detail}>
-                <Image style={styles.bookcover} source={{ uri: isbnnum.key.cover }}></Image>
-                <View style={styles.detailtext}>
-                    <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.key.booknameth}</Text>
-                    <Text style={styles.author}>{isbnnum.key.author}</Text>
-                </View>
-            </View>)
+            panel.push(
+                <View style={styles.detail}>
+                    <Image style={styles.bookcover} source={{ uri: isbnnum.key.cover }}></Image>
+                    <View style={styles.detailtext}>
+                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.key.booknameth}</Text>
+                        <Text style={styles.author}>{isbnnum.key.author}</Text>
+                    </View>
+                </View>)
         })
         return panel;
     }
@@ -49,7 +53,6 @@ export default class Find extends Component {
             <ScrollView>
                 <Navigation />
                 <View style={styles.hotbar}>
-                    <Text style={styles.choicename}>Hooray! Found your book!</Text>
                     <View style={styles.bookpanel}>
                         {this.renderBooks(array)}
                     </View>
