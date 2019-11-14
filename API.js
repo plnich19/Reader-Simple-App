@@ -1,7 +1,7 @@
-let URL = 'https://us-central1-reader-simple-app.cloudfunctions.net/findBook'
+let URL = 'https://us-central1-reader-simple-app.cloudfunctions.net/'
 
-export default (nameth) => {
-    return fetch(URL + '?nameth=' + nameth).then((res) => {
+export default (action, nameth) => {
+    return fetch(URL + action + '?nameth=' + nameth).then((res) => {
         console.log(res);
         return res.json()
     })

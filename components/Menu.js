@@ -93,15 +93,7 @@ export default class Menu extends Component {
 
     findBook = async () => {
         if (this.state.search !== '') {
-            // await API('findBook', this.state.search).then((isbn) => {
-            //     this.setState({ ifSearch: true })
-            //     // this.redirect(data);
-            //     // console.log("ชื่อนี่", this.state.books)
-            //     if (this.state.ifSearch) {
-            //         this.setState({ ifSearch: false })
-            //         this.redirect(isbn);
-            //     }
-            await API(this.state.search).then((data) => {
+            await API('findBook', this.state.search).then((data) => {
                 this.setState({ books: data, ifSearch: true })
                 this.redirect(data);
                 console.log("ชื่อนี่", data)
@@ -113,7 +105,6 @@ export default class Menu extends Component {
         const { search, ifSearch, books } = this.state;
         if (ifSearch) {
             this.setState({ ifSearch: false })
-            //this.redirect(books);
         }
         return (<View style={styles.menupanel}>
             <SearchBar
@@ -126,9 +117,6 @@ export default class Menu extends Component {
             <TouchableHighlight style={styles.loginbutton} onPress={() => this.findBook()}>
                 <Text style={styles.loginbuttontext}>Search</Text>
             </TouchableHighlight>
-            {/* <TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}>
-                <Text style={styles.loginbuttontext}>Log in/Sign up</Text>
-            </TouchableHighlight> */}
             {this.SignInToggle()}
         </View>);
 

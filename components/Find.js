@@ -15,12 +15,9 @@ export default class Find extends Component {
         }
     }
 
-    // componentWillMount() {
-    // }
     renderBooks(isbn) {
-        //const { books } = this.state.books;
         if (isbn.length == 0) {
-            return (<Text style={styles.choicename}>Sorry :(</Text>);
+            return (<Text style={styles.notfound}>Sorry We don't have that book right now :(</Text>);
         }
         let panel = [];
         isbn.map((key) => {
@@ -34,10 +31,6 @@ export default class Find extends Component {
                         </View>
                     </View>)
             );
-
-
-            // console.log("isbnum", isbnnum);
-            // console.log(typeof (isbnnum));
         }
 
         );
@@ -106,5 +99,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'grey',
         textAlign: 'center'
-    }
+    },
+    notfound: {
+        marginTop: 30,
+        textAlign: 20,
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 30,
+        marginBottom: 30
+    },
 });

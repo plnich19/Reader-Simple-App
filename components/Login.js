@@ -50,6 +50,7 @@ class Login extends Component {
             .then(user => {
                 this.setState({ isShowLogin: true, modalVisible: false });
                 console.log("Created user successfully");
+                this.redirect();
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
