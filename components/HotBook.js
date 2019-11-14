@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
+import { connect } from 'react-redux';
+import * as actions from '../actions/index.js';
 import API from '../API.js';
 
 export default class HotBook extends Component {
@@ -21,14 +23,15 @@ export default class HotBook extends Component {
         })
     }
     componentWillMount() {
+        // this.props.fetchData();
         // this.getBook();
         firebase.database().ref('books/').once('value', (snap) => {
             this.setState({ books: snap.val() })
         })
-        console.log("state" + this.state.books);
+        //console.log("state" + this.state.books);
     }
     renderBooks() {
-        console.log('wef');
+        // this.getBook();
         let books = [];
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {
@@ -42,6 +45,19 @@ export default class HotBook extends Component {
             })
             return books;
         }
+        // })
+
+        // data.map(item => {
+        //     books.push(<View key={item.id} style={styles.detail}>
+        //         <Image style={styles.bookcover} source={{ uri: item.cover }}></Image>
+        //         <View style={styles.detailtext}>
+        //             <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{item.nameth}</Text>
+        //             <Text style={styles.author}>{item.author}</Text>
+        //         </View>
+        //     </View>
+        //     )
+        // })
+        // return books;
     }
 
     render() {
@@ -55,6 +71,14 @@ export default class HotBook extends Component {
         )
     }
 }
+
+// const mapStateToProps = ({ data }) => {
+//     return {
+//         data
+//     }
+// }
+
+//export default connect(mapStateToProps, actions)(HotBook)
 
 const styles = StyleSheet.create({
     hotbar: {

@@ -5,7 +5,22 @@ admin.initializeApp();
 
 exports.getBook = functions.https.onRequest(async (req, res) => {
     return admin.database().ref('books/').once('value', (snapshot) => {
-        return snapshot.val();
+        let obj = [];
+        let books = snapshot.val();
+        Object.keys(books).map((key) => {
+            console.log("key ====", key);
+            obj.push(
+                {
+                    id: key,
+                    nameth: books[key].nameth,
+                    nameen: books[key].nameen,
+                    author: books[key].author,
+                    isbn: books[key].bookisbn,
+                    cover: books[key].cover
+                }
+            )
+        })
+        return res.json(JSON.stringify(obj));
     })
 })
 
