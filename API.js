@@ -1,13 +1,8 @@
-let URL = 'https://us-central1-reader-simple-app.cloudfunctions.net/'
+let URL = 'https://us-central1-reader-simple-app.cloudfunctions.net/findBook'
 
-export default (action, nameth) => {
-    return fetch(URL + action + '?nameth=' + nameth).then((res) => {
-        // res.set("Access-Control-Allow-Origin", "*");
-        // res.set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-        // res.set(
-        //     "Access-Control-Allow-Headers",
-        //     "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
-        // );
+export default (nameth) => {
+    return fetch(URL + '?nameth=' + nameth).then((res) => {
+        console.log(res);
         return res.json()
     })
 }

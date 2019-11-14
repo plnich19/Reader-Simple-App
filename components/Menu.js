@@ -93,20 +93,28 @@ export default class Menu extends Component {
 
     findBook = async () => {
         if (this.state.search !== '') {
-            await API('findBook', this.state.search).then((isbn) => {
-                this.setState({ ifSearch: true })
-                // this.redirect(data);
-                // console.log("ชื่อนี่", this.state.books)
-                if (this.state.ifSearch) {
-                    this.setState({ ifSearch: false })
-                    this.redirect(isbn);
-                }
+            // await API('findBook', this.state.search).then((isbn) => {
+            //     this.setState({ ifSearch: true })
+            //     // this.redirect(data);
+            //     // console.log("ชื่อนี่", this.state.books)
+            //     if (this.state.ifSearch) {
+            //         this.setState({ ifSearch: false })
+            //         this.redirect(isbn);
+            //     }
+            await API(this.state.search).then((data) => {
+                this.setState({ books: data, ifSearch: true })
+                this.redirect(data);
+                console.log("ชื่อนี่", data)
             })
         }
     }
 
     render() {
         const { search, ifSearch, books } = this.state;
+        if (ifSearch) {
+            this.setState({ ifSearch: false })
+            //this.redirect(books);
+        }
         return (<View style={styles.menupanel}>
             <SearchBar
                 keyboardType='default'

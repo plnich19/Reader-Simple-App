@@ -30,7 +30,7 @@ exports.findBook = functions.https.onRequest(async (req, res) => {
 
         let bookName = req.query.nameth;
 
-        test(bookName, books, res)
+        test(bookName, books, res, snapshot)
 
         res.set("Access-Control-Allow-Origin", "*");
         res.set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
@@ -42,7 +42,7 @@ exports.findBook = functions.https.onRequest(async (req, res) => {
 })
 
 
-let test = async function (bookName, books, res) {
+let test = async function (bookName, books, res, snapshot) {
     let bookNameLow = bookName.toLocaleLowerCase();
     let booksObj = [];
     let nameth = 'Unfortunately, we dont have that book yet :('
@@ -51,10 +51,20 @@ let test = async function (bookName, books, res) {
         let booknameen = book.nameen.toLocaleLowerCase();
         let bookauthor = book.author.toLocaleLowerCase();
         let bookisbn = book.isbn;
-        let bookkey = books.getKey();
+        let key = snapshot.getKey();
+        console.log(book.isbn);
+        var obj = {
+            key: {
+                booknameth: booknameth,
+                booknameen: booknameen,
+                author: bookauthor,
+                isbn: bookisbn
+            }
+        }
+        // let bookkey = books.getKey();
         console.log('bookNameLow', bookNameLow);
         if (booknameth.includes(bookNameLow) || booknameen.includes(bookNameLow) || bookauthor.includes(bookNameLow) || bookisbn === bookName) {
-            booksObj.push(book);
+            booksObj.push(obj);
         }
     })
 

@@ -3,9 +3,8 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { withNavigation } from 'react-navigation';
 import * as firebase from 'firebase';
 import _ from 'lodash';
-import Navigation from './Navigation.js';
 
-class FindScreen extends Component {
+export default class Find extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,10 +19,8 @@ class FindScreen extends Component {
         //const { books } = this.state.books;
         let panel = [];
         isbn.forEach((isbnnum) => {
-            // firebase.database().ref('books/').orderByChild('isbn').equalTo(isbnnum).on('child_added', (snap) => {
-            //     this.setState({ books: snap.val() })
-            //     console.log("child", this.state.books)
-            // })
+            console.log(isbnnum);
+            console.log(typeof (isbnnum));
             panel.push(<View style={styles.detail}>
                 <Image style={styles.bookcover} source={{ uri: isbnnum.cover }}></Image>
                 <View style={styles.detailtext}>
@@ -47,7 +44,6 @@ class FindScreen extends Component {
 
         return (
             <View style={styles.hotbar}>
-                <Navigation />
                 <Text style={styles.choicename}>Hooray! Found your book!</Text>
                 <View style={styles.bookpanel}>
                     {this.renderBooks(array)}
@@ -96,5 +92,3 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
-
-export default withNavigation(FindScreen);
