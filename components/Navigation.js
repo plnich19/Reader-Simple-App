@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { withNavigation } from 'react-navigation';
 import Menu from "./Menu.js";
+import { LinearGradient } from 'expo-linear-gradient';
 
 class Navigation extends Component {
     constructor(props) {
@@ -27,30 +28,42 @@ class Navigation extends Component {
 
     render() {
         return (
+
             <View>
-                <View style={styles.navigation}>
-                    <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')}>
-                        <Image
-                            style={styles.logo}
-                            source={require("../assets/src/booklogo3.png")}
-                        />
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={() => this.toggle()}>
-                        <Image style={styles.menu}
-                            source={require("../assets/src/menu.png")} />
-                    </TouchableHighlight>
-                </View>
-                <View style={styles.navigation}>
-                    {this.renderTopMenu()}
-                </View>
+                <LinearGradient
+                    colors={['#a7a4e6', '#6d6ddb', '#b3a4b3']}
+                    start={[1, 0]} end={[0, 1]}
+                    style={{ borderRadius: 5 }}>
+                    <View style={styles.navigation}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
+                            <Image
+                                style={styles.logo}
+                                source={require("../assets/src/booklogo2.png")}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.toggle()}>
+                            <Image style={styles.menu}
+                                source={require("../assets/src/menu.png")} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.navigation}>
+                        {this.renderTopMenu()}
+                    </View>
+                </LinearGradient>
             </View>
+
         );
     }
 }
 
 const styles = StyleSheet.create({
+    linearGradient: {
+        flex: 1,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 5
+    },
     navigation: {
-        backgroundColor: "black",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between"

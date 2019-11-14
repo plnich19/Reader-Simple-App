@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     notfound: {
         marginTop: 30,
-        textAlign: 20,
+        textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 30,

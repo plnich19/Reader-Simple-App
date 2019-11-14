@@ -6,6 +6,8 @@ import config from '../firebase/config.js';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index.js';
 import API from '../API.js';
+import Emoji from 'react-native-emoji';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default class HotBook extends Component {
     constructor(props) {
@@ -36,10 +38,12 @@ export default class HotBook extends Component {
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {
                 books.push(<View key={key} style={styles.detail}>
-                    <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>
+                        <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
+                    </TouchableOpacity>
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].nameth}</Text>
-                        <Text style={styles.author}>{this.state.books[key].author}</Text>
+                        <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].author}</Text>
                     </View>
                 </View>)
             })
@@ -63,7 +67,7 @@ export default class HotBook extends Component {
     render() {
         return (
             <View style={styles.hotbar}>
-                <Text style={styles.choicename}>So Hot Right Now</Text>
+                <Text style={styles.choicename}>Let's Explore <Emoji name="star2" style={{ fontSize: 20 }} /></Text>
                 <View style={styles.bookpanel}>
                     {this.renderBooks()}
                 </View>

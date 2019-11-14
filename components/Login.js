@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { TextInput, HelperText } from "react-native-paper";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { TextInput, HelperText, Button, Snackbar } from "react-native-paper";
 import { withNavigation } from 'react-navigation';
 import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
@@ -16,7 +16,8 @@ class Login extends Component {
             isShowLogin: true,
             email: "",
             password: "",
-            login: false
+            login: false,
+            snack: false
         };
         this.register = this.register.bind(this);
         this.login = this.login.bind(this);
@@ -48,16 +49,51 @@ class Login extends Component {
             .auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(user => {
-                this.setState({ isShowLogin: true, modalVisible: false });
+                this.setState({ isShowLogin: true });
                 console.log("Created user successfully");
-                this.redirect();
+                this.setState({ snack: true });
+                this.snack(this.state.email, 'OK')
+                //this.redirect();
             })
             .catch(error => {
+                this.snack('', '404')
                 alert("An error occured: " + error.message);
                 console.log("An error occured", error.message);
             });
     }
-
+    snack(user, message) {
+        if (this.state.snack && message !== '404') {
+            return (<Snackbar
+                style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+                visible={this.state.snack}
+                onDismiss={() => this.setState({ snack: false })}
+                action={{
+                    label: 'Yeah!',
+                    onPress: () => {
+                        this.setState({ snack: false })
+                        this.redirect()
+                    },
+                }}
+            >
+                Welcome! {user}
+            </Snackbar>)
+        }
+        else if (message == '404') {
+            return (<Snackbar
+                style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                visible={this.state.snack}
+                onDismiss={() => this.setState({ snack: false })}
+                action={{
+                    label: 'Got it',
+                    onPress: () => {
+                        this.setState({ snack: false })
+                    },
+                }}
+            >
+                Account may be not existed or email/password incorrect
+            </Snackbar>)
+        }
+    }
     login() {
         firebase
             .auth()
@@ -66,9 +102,11 @@ class Login extends Component {
                 console.log("Login user successfully");
                 console.log(user);
                 console.log(this.state.login)
-                this.redirect()
+                this.setState({ snack: true });
+                this.snack(this.state.email)
             })
             .catch(error => {
+                this.snack('', '404')
                 alert("An error occured: " + error.message);
                 console.log("An error occured", error.message);
             });
@@ -76,7 +114,7 @@ class Login extends Component {
 
     redirect() {
         const { navigate } = this.props.navigation;
-        alert('Welcome! ' + this.state.email)
+        // alert('Welcome! ' + this.state.email)
         navigate('Home')
     }
     forceUpdateHandler() {
@@ -91,6 +129,9 @@ class Login extends Component {
             .then(() => {
                 console.log("Logout successfully");
                 alert("Logout Successfully");
+                this.setState({ login: false })
+                this.setState({ snack: true });
+                this.snack()
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
@@ -148,12 +189,11 @@ class Login extends Component {
                                     underlineColor: 'transparent', background: '#003489'
                                 }
                             }} ></TextInput>
-                        <TouchableOpacity style={styles.loginbutton} onPress={this.login}>
-                            <Text style={styles.loginbuttontext}>Log in</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.loginbutton} onPress={() => this.setState({ isShowLogin: false })}>
-                            <Text style={styles.loginbuttontext}>Don't have an account?</Text>
-                        </TouchableOpacity>
+
+                        <Button style={styles.loginbutton} icon="login" mode="contained" onPress={this.login}>
+                            Log in</Button>
+                        <Button style={styles.loginbutton} icon="auto-fix" mode="contained" onPress={() => this.setState({ isShowLogin: false })}>
+                            Don't have an account?</Button>
 
                     </View>
 
@@ -180,6 +220,13 @@ class Login extends Component {
                                     underlineColor: 'transparent', background: '#003489'
                                 }
                             }}></TextInput>
+                        <HelperText
+                            style={{ marginLeft: 28, marginTop: 5 }}
+                            type="error"
+                            visible={false}
+                        >
+                            Don't show your password to others!
+                         </HelperText>
                         <TextInput style={styles.input}
                             label='Password'
                             secureTextEntry={true}
@@ -193,12 +240,12 @@ class Login extends Component {
                                     underlineColor: 'transparent', background: '#003489'
                                 }
                             }} ></TextInput>
-                        <TouchableOpacity style={styles.loginbutton} onPress={this.register}>
-                            <Text style={styles.loginbuttontext}>Register</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.loginbutton} onPress={() => this.setState({ isShowLogin: true })}>
-                            <Text style={styles.loginbuttontext}>Already have an account?</Text>
-                        </TouchableOpacity>
+                        <Button style={styles.loginbutton} icon="lead-pencil" mode="contained" onPress={this.register}>
+                            Register</Button>
+                        <Button style={styles.loginbutton} icon="login" mode="contained" onPress={() => this.setState({ isShowLogin: true })}>
+                            Already have an account?</Button>
+
+
 
                     </View>
 
@@ -215,9 +262,11 @@ class Login extends Component {
                 </ScrollView>)
         }
         return (
+
             <ScrollView style={styles.loginpanel}>
 
                 <View style={styles.loginpanel}>{authUI}</View>
+                {this.snack()}
 
             </ScrollView>
         )
@@ -260,7 +309,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 40,
         marginRight: 40,
-        backgroundColor: 'black',
+        // backgroundColor: 'black',
         height: 40,
         justifyContent: 'center'
     },

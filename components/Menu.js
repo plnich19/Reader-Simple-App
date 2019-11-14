@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
-import { SearchBar } from 'react-native-elements';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { Searchbar, Snackbar } from 'react-native-paper';
 import * as firebase from 'firebase';
 import API from '../API.js';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default class Menu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: false
+            login: false,
+            snack: false
         }
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
@@ -48,6 +50,24 @@ export default class Menu extends Component {
             });
     }
 
+    snack() {
+        if (this.state.snack) {
+            return (<Snackbar
+                style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                visible={this.state.snack}
+                onDismiss={() => this.setState({ snack: false })}
+                action={{
+                    label: 'OK',
+                    onPress: () => {
+                        this.setState({ snack: false })
+                    },
+                }}
+            >
+                See you again
+            </Snackbar>)
+        }
+    }
+
     // for lab: add logout function
     logout() {
         firebase
@@ -57,6 +77,8 @@ export default class Menu extends Component {
                 console.log("Logout successfully");
                 alert("Logout Successfully");
                 this.setState({ login: false })
+                this.setState({ snack: true });
+                this.snack()
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
@@ -75,11 +97,11 @@ export default class Menu extends Component {
     SignInToggle() {
         if (this.state.login) {
             return (<View>
-                <TouchableHighlight style={styles.loginbutton}><Text style={styles.loginbuttontext}>My Cart</Text></TouchableHighlight>
-                <TouchableHighlight style={styles.loginbutton} onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableHighlight></View>)
+                <TouchableOpacity ><Text style={styles.loginbuttontext}>My Cart</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableOpacity></View>)
         }
         else {
-            return (<TouchableHighlight style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}><Text style={styles.loginbuttontext}>Log in/Sign up</Text></TouchableHighlight>)
+            return (<TouchableOpacity style={styles.loginbutton} onPress={() => this.props.navigation.navigate('Login')}><Text style={styles.loginbuttontext}>Log in/Sign up</Text></TouchableOpacity>)
         }
     }
     state = {
@@ -106,19 +128,23 @@ export default class Menu extends Component {
         if (ifSearch) {
             this.setState({ ifSearch: false })
         }
-        return (<View style={styles.menupanel}>
-            <SearchBar
-                keyboardType='default'
-                containerStyle={{ backgroundColor: 'black' }}
-                placeholder="Search Here..."
-                onChangeText={this.updateSearch}
-                value={search}
-            />
-            <TouchableHighlight style={styles.loginbutton} onPress={() => this.findBook()}>
-                <Text style={styles.loginbuttontext}>Search</Text>
-            </TouchableHighlight>
-            {this.SignInToggle()}
-        </View>);
+        return (
+
+            <View style={styles.menupanel}>
+
+                <Searchbar
+                    keyboardType='default'
+                    // containerStyle={{ backgroundColor: 'black' }}
+                    placeholder="Search Here..."
+                    onChangeText={this.updateSearch}
+                    value={search}
+                    iconColor='#6d6ddb'
+                />
+                <TouchableOpacity style={styles.loginbutton} onPress={() => this.findBook()}>
+                    <Text style={styles.loginbuttontext}>Search</Text>
+                </TouchableOpacity>
+                {this.SignInToggle()}
+            </View>);
 
     }
 }
@@ -128,17 +154,19 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         flexWrap: 'wrap',
-        backgroundColor: 'black'
+        backgroundColor: 'white'
     },
     loginbutton: {
         flex: 1,
-        backgroundColor: 'black'
+        backgroundColor: 'white',
+        borderColor: '#f931f9',
+
     },
     loginbuttontext: {
         marginTop: 20,
         marginBottom: 20,
         marginLeft: 15,
-        color: 'white',
+        color: 'black',
         fontSize: 15,
         fontWeight: 'bold',
         textAlign: 'left',
