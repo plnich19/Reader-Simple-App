@@ -65,7 +65,7 @@ export default class Menu extends Component {
     }
 
     redirect(isbn) {
-        console.log("bookhe", isbn);
+        // console.log("bookhe", isbn);
         const { navigate } = this.props.navigation;
         navigate('Find', {
             isbn: isbn,

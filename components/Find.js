@@ -23,20 +23,27 @@ export default class Find extends Component {
             return (<Text style={styles.choicename}>Sorry :(</Text>);
         }
         let panel = [];
-        isbn.forEach((isbnnum) => {
-            console.log(isbnnum);
-            console.log(typeof (isbnnum));
+        isbn.map((key) => {
+            Object.keys(key).map(obj =>
+                panel.push(
+                    <View style={styles.detail}>
+                        <Image style={styles.bookcover} source={{ uri: key[obj].cover }}></Image>
+                        <View style={styles.detailtext}>
+                            <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: obj })}>{key[obj].nameth}</Text>
+                            <Text style={styles.author}>{key[obj].author}</Text>
+                        </View>
+                    </View>)
+            );
 
-            panel.push(
-                <View style={styles.detail}>
-                    <Image style={styles.bookcover} source={{ uri: isbnnum.key.cover }}></Image>
-                    <View style={styles.detailtext}>
-                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.key.booknameth}</Text>
-                        <Text style={styles.author}>{isbnnum.key.author}</Text>
-                    </View>
-                </View>)
-        })
+
+            // console.log("isbnum", isbnnum);
+            // console.log(typeof (isbnnum));
+        }
+
+        );
         return panel;
+
+
     }
 
 
