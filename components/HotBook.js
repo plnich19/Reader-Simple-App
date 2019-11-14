@@ -21,14 +21,14 @@ export default class HotBook extends Component {
         })
     }
     componentWillMount() {
-        //this.getBook();
+        // this.getBook();
         firebase.database().ref('books/').once('value', (snap) => {
             this.setState({ books: snap.val() })
         })
         console.log("state" + this.state.books);
     }
     renderBooks() {
-
+        console.log('wef');
         let books = [];
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {

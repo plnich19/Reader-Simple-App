@@ -1,27 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
 
 admin.initializeApp();
 
 exports.getBook = functions.https.onRequest(async (req, res) => {
     return admin.database().ref('books/').once('value', (snapshot) => {
-        res = snapshot.val()
-
-        res.set("Access-Control-Allow-Origin", "*");
-        res.set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-        res.set(
-            "Access-Control-Allow-Headers",
-            "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
-        );
-        return res;
-    }
-    )
+        return snapshot.val();
+    })
 })
 
 exports.findBook = functions.https.onRequest(async (req, res) => {
@@ -66,34 +51,3 @@ exports.findBook = functions.https.onRequest(async (req, res) => {
         return res.json(JSON.stringify(booksObj));
     })
 })
-
-
-// let test = async function (bookName, books, res, key) {
-//     let bookNameLow = bookName.toLocaleLowerCase();
-//     let booksObj = [];
-//     let nameth = 'Unfortunately, we dont have that book yet :('
-//     // await books.forEach(book => {
-//     let booknameth = books.nameth.toLocaleLowerCase();
-//     let booknameen = books.nameen.toLocaleLowerCase();
-//     let bookauthor = books.author.toLocaleLowerCase();
-//     let bookisbn = books.isbn;
-//     console.log(books.isbn);
-//     var obj = {
-//         key: {
-//             booknameth: book.nameth,
-//             booknameen: book.nameen,
-//             author: book.author,
-//             cover: book.cover,
-//             isbn: book.isbn,
-//         }
-//     }
-//     console.log('bookNameLow', bookNameLow);
-//     if (booknameth.includes(bookNameLow) || booknameen.includes(bookNameLow) || bookauthor.includes(bookNameLow) || bookisbn === bookName) {
-//         booksObj.push(obj);
-//         // booksObj.push(bookisbn);
-//     }
-
-
-
-//     await res.json(JSON.stringify(booksObj));
-// }
