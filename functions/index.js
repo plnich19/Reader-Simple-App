@@ -9,8 +9,23 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+exports.getBook = functions.https.onRequest(async (req, res) => {
+    return admin.database().ref('books/').once('value', (snapshot) => {
+        res = snapshot.val()
+
+        res.set("Access-Control-Allow-Origin", "*");
+        res.set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        res.set(
+            "Access-Control-Allow-Headers",
+            "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+        );
+        return res;
+    }
+    )
+})
+
 exports.findBook = functions.https.onRequest(async (req, res) => {
-    return admin.database().ref('books').once('value', (snapshot) => {
+    return admin.database().ref('books/').once('value', (snapshot) => {
         let books = snapshot.val()
 
         let bookName = req.query.nameth;
@@ -36,15 +51,10 @@ let test = async function (bookName, books, res) {
         let booknameen = book.nameen.toLocaleLowerCase();
         let bookauthor = book.author.toLocaleLowerCase();
         let bookisbn = book.isbn;
+        let bookkey = books.getKey();
         console.log('bookNameLow', bookNameLow);
         if (booknameth.includes(bookNameLow) || booknameen.includes(bookNameLow) || bookauthor.includes(bookNameLow) || bookisbn === bookName) {
-            bookkey = books.key;
-            nameth = book.nameth;
-            nameen = book.nameen;
-            author = book.author;
-            cover = book.cover;
             booksObj.push(book);
-            console.log('push push');
         }
     })
 

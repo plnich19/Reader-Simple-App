@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { withNavigation } from 'react-navigation';
+import * as firebase from 'firebase';
 import _ from 'lodash';
 import Navigation from './Navigation.js';
 
@@ -8,42 +9,48 @@ class FindScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            books: null,
+            books: [],
+            allbooks: []
         }
     }
 
-    componentWillMount() {
-        const { params } = this.props.navigation.state;
-
-        this.setState({ books: params.books })
-
-        console.log(this.state.books);
-    }
-    renderBooks() {
+    // componentWillMount() {
+    // }
+    renderBooks(isbn) {
+        //const { books } = this.state.books;
         let panel = [];
-        if (this.state.books != null) {
-            Object.keys(this.state.books).map((key, index) => {
-                panel.push(<View key={key} style={styles.detail}>
-                    <Image style={styles.bookcover} source={{ uri: this.state.books[key].cover }}></Image>
-                    <View style={styles.detailtext}>
-                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.books[key].nameth}</Text>
-                        <Text style={styles.author}>{this.state.books[key].author}</Text>
-                    </View>
-                </View>)
-            })
-            return panel;
-        }
-        return (<Text>No more data</Text>)
+        isbn.forEach((isbnnum) => {
+            // firebase.database().ref('books/').orderByChild('isbn').equalTo(isbnnum).on('child_added', (snap) => {
+            //     this.setState({ books: snap.val() })
+            //     console.log("child", this.state.books)
+            // })
+            panel.push(<View style={styles.detail}>
+                <Image style={styles.bookcover} source={{ uri: isbnnum.cover }}></Image>
+                <View style={styles.detailtext}>
+                    <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.nameth}</Text>
+                    <Text style={styles.author}>{isbnnum.author}</Text>
+                </View>
+            </View>)
+        })
+        return panel;
     }
+
 
 
     render() {
+        // const { params } = this.props.navigation.state;
+        // const { isbn } = params ? params.isbn : null;
+        const isbn = this.props.navigation.getParam('isbn', []);
+        console.log(typeof (isbn));
+        console.log("2", isbn)
+        var array = JSON.parse(isbn);
+
         return (
             <View style={styles.hotbar}>
                 <Navigation />
                 <Text style={styles.choicename}>Hooray! Found your book!</Text>
                 <View style={styles.bookpanel}>
-                    {this.renderBooks()}
+                    {this.renderBooks(array)}
                 </View>
             </View>
         )

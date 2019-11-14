@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
+import API from '../API.js';
 
 export default class HotBook extends Component {
     constructor(props) {
@@ -14,7 +15,13 @@ export default class HotBook extends Component {
             books: [],
         }
     }
+    getBook = async () => {
+        await API('getBook', 'noneed').then((data) => {
+            this.setState({ books: data });
+        })
+    }
     componentWillMount() {
+        //this.getBook();
         firebase.database().ref('books/').once('value', (snap) => {
             this.setState({ books: snap.val() })
         })
