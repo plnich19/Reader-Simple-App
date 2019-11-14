@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { withNavigation } from 'react-navigation';
 import * as firebase from 'firebase';
 import _ from 'lodash';
+import { ScrollView } from "react-native-gesture-handler";
+import Navigation from './Navigation.js';
 
 export default class Find extends Component {
     constructor(props) {
@@ -21,11 +23,12 @@ export default class Find extends Component {
         isbn.forEach((isbnnum) => {
             console.log(isbnnum);
             console.log(typeof (isbnnum));
+
             panel.push(<View style={styles.detail}>
-                <Image style={styles.bookcover} source={{ uri: isbnnum.cover }}></Image>
+                <Image style={styles.bookcover} source={{ uri: isbnnum.key.cover }}></Image>
                 <View style={styles.detailtext}>
-                    <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.nameth}</Text>
-                    <Text style={styles.author}>{isbnnum.author}</Text>
+                    <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail')}>{isbnnum.key.booknameth}</Text>
+                    <Text style={styles.author}>{isbnnum.key.author}</Text>
                 </View>
             </View>)
         })
@@ -43,12 +46,15 @@ export default class Find extends Component {
         var array = JSON.parse(isbn);
 
         return (
-            <View style={styles.hotbar}>
-                <Text style={styles.choicename}>Hooray! Found your book!</Text>
-                <View style={styles.bookpanel}>
-                    {this.renderBooks(array)}
+            <ScrollView>
+                <Navigation />
+                <View style={styles.hotbar}>
+                    <Text style={styles.choicename}>Hooray! Found your book!</Text>
+                    <View style={styles.bookpanel}>
+                        {this.renderBooks(array)}
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }

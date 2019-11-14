@@ -51,20 +51,21 @@ let test = async function (bookName, books, res, snapshot) {
         let booknameen = book.nameen.toLocaleLowerCase();
         let bookauthor = book.author.toLocaleLowerCase();
         let bookisbn = book.isbn;
-        let key = snapshot.getKey();
         console.log(book.isbn);
         var obj = {
             key: {
-                booknameth: booknameth,
-                booknameen: booknameen,
-                author: bookauthor,
-                isbn: bookisbn
+                booknameth: book.nameth,
+                booknameen: book.nameen,
+                author: book.author,
+                cover: book.cover,
+                isbn: book.isbn,
             }
         }
         // let bookkey = books.getKey();
         console.log('bookNameLow', bookNameLow);
         if (booknameth.includes(bookNameLow) || booknameen.includes(bookNameLow) || bookauthor.includes(bookNameLow) || bookisbn === bookName) {
             booksObj.push(obj);
+            // booksObj.push(bookisbn);
         }
     })
 
