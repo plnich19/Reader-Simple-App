@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import { Button, TextInput } from 'react-native-paper';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
@@ -45,20 +46,49 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            // var userinfo = firebase.auth().currentUser;
-            // if (userinfo != null) {
-            //     var uid = userinfo.uid;
-            //     console.log("User details", userinfo);
-            // this.setState({ uid: uid }, () => {
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-                console.log(snap.val())
                 const data = snap.val()
                 this.setState({
                     carts: data
                 });
             });
-            // })
         }
+    }
+
+    addItems(key) {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        firebase.database().ref('user/' + uid + '/cart/' + key).update({
+            amount: this.state.carts[key].amount + 1
+        }).then((res) => {
+            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+            //make changes to ingredients
+            cartsCopy[key].amount = this.state.carts[key].amount + 1//whatever new ingredients are
+            this.setState({
+                carts: cartsCopy
+            })
+            console.log("added")
+        }).catch((error) => {
+            console.log("error added", error)
+        })
+    }
+
+    deductItems(key) {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        firebase.database().ref('user/' + uid + '/cart/' + key).update({
+            amount: this.state.carts[key].amount - 1
+        }).then((res) => {
+            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+            //make changes to ingredients
+            cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
+            this.setState({
+                carts: cartsCopy
+            })
+            console.log("deduct")
+        }).catch((error) => {
+            console.log("error deducted", error)
+        })
     }
 
     renderCarts() {
@@ -72,7 +102,18 @@ export default class myCart extends Component {
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
-                        <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].amount}</Text>
+                    </View>
+                    <View>
+                        <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.deductItems(
+                            key)}>
+                            -
+                        </Button>
+                        <TextInput style={styles.author} value={this.state.carts[key].amount}></TextInput>
+                        <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addItems(
+                            key)}>
+                            +
+                        </Button>
+
                     </View>
                 </View>)
             })
@@ -105,10 +146,10 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginBottom: 30
     }, bookpanel: {
-        flexDirection: 'row',
         flexWrap: 'wrap',
     },
     detail: {
+        flexDirection: 'row',
         marginLeft: 20,
         marginRight: 15,
         marginBottom: 25
@@ -117,13 +158,14 @@ const styles = StyleSheet.create({
         width: 150
     },
     bookcover: {
-        width: 150,
-        height: 250,
-        marginBottom: 10
+        width: 50,
+        height: 75,
+        marginLeft: 20,
+        marginBottom: 10,
+        marginRight: 40
     },
     title: {
         fontSize: 16,
-        textAlign: 'center',
         fontWeight: 'bold',
         color: 'black'
     },
@@ -131,6 +173,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: 'grey',
-        textAlign: 'center'
-    }
+    },
+    amountbutton: {
+        marginTop: 30,
+        marginLeft: 10,
+        // backgroundColor: '#922B21',
+        height: 40,
+        justifyContent: 'center',
+    },
+
 })
