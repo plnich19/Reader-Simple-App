@@ -12,7 +12,6 @@ import HomeScreen from './components/HomeScreen.js';
 import BookDetail from './components/BookDetail.js';
 import Login from './components/Login.js';
 import Find from './components/Find.js';
-import myCart from './components/myCart.js';
 
 //const store = createStore(productReducer, applyMiddleware(logger));
 
@@ -20,8 +19,7 @@ const AppNavigator = createStackNavigator({
   Home: HomeScreen,
   BookDetail: BookDetail,
   Login: Login,
-  Find: Find,
-  Cart: myCart
+  Find: Find
 },
   {
     initialRouteName: 'Home',
