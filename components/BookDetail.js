@@ -17,7 +17,8 @@ export default class BookDetail extends Component {
             books: [],
             login: false,
             amount: '',
-            name: ''
+            name: '',
+            add: false
         }
     }
 
@@ -53,47 +54,43 @@ export default class BookDetail extends Component {
     updateAmount = amount => {
         this.setState({ amount });
     };
-
-    addtoCart(key, nameth, nameen, author, price, cover, amount) {
-        console.log("key", key)
-        console.log("nameth = ", nameth)
-        console.log("nameen = ", nameen)
-        console.log("author ", author)
-        console.log("price = ", price)
-        console.log("cover = ", cover)
-        console.log("amonth = ", this.state.amount)
-        console.log("email = ", this.state.name)
-        console.log(typeof (email))
-        API('addtoCart', key, nameth, nameen, author, price, cover, this.state.amount, this.state.name);
-        // firebase.database().ref('user/' + '131' + '/cart/' + key).set({
-        //     nameth: 'nameth',
-        //     nameen: 'nameen',
-        //     author: 'author',
-        //     price: 12,
-        //     amount: this.state.amount,
-        //     cover: 'cover'
-        // })
-
-    }
-
     checklogin() {
         const { params } = this.props.navigation.state;
         const key = params ? params.key : null;
         if (this.state.login) {
             return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount} />
-                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={this.addtoCart(
-                    key, this.state.books.nameth,
-                    this.state.books.nameen,
-                    this.state.books.author,
-                    this.state.books.price,
-                    this.state.books.cover,
-                    this.state.books.amount)}>
+                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addtoCart(
+                    key)}>
                     Add to cart
 </Button></View>)
         }
         else {
             return (<View style={{ marginTop: 20, marginLeft: 10 }}><Text style={{ fontSize: 15, fontWeight: 'bold' }}>Please log in first to purchase books</Text></View>)
         }
+    }
+
+    addtoCart(key) {
+        this.setState({ add: true })
+        if (this.state.add && this.state.amount < this.state.books.stock) {
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+                var uid = user.uid;
+            }
+            console.log("uid = ", uid)
+            firebase.database().ref('user/' + uid + '/cart/' + key).set({
+                amount: this.state.amount
+            }).then((res) => {
+                console.log("added")
+            }).catch((error) => {
+                console.log("error added", error)
+            })
+        }
+        else {
+            alert('YOUR PURCHASE EXCEED OUR STOCK')
+        }
+        console.log("key", key)
+        console.log("amonth = ", this.state.amount)
+        console.log("email = ", this.state.name)
     }
     render() {
         return (

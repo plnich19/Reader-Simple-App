@@ -3,28 +3,23 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
-exports.addtoCart = functions.https.onRequest(async (req, res) => {
-    console.log("emailhere", req.query.email)
-    return admin.auth().getUserByEmail(req.query.email)
-        .then(function (userRecord) {
-            // See the UserRecord reference doc for the contents of userRecord.
+// exports.addtoCart = functions.https.onRequest(async (req, res) => {
+//     console.log("emailhere", req.query.email)
+//     return admin.auth().getUserByEmail(req.query.email)
+//         .then(function (userRecord) {
+//             // See the UserRecord reference doc for the contents of userRecord.
 
-            let userRec = userRecord.toJSON();
-            console.log('Successfully fetched user data:', userRecord.toJSON());
-            admin.database().ref('user/' + userRec.uid + '/cart/' + req.query.key).set({
-                nameth: req.query.nameth,
-                nameen: req.query.nameen,
-                author: req.query.author,
-                price: req.query.price,
-                amount: req.query.amount,
-                cover: req.query.cover
-            })
+//             let userRec = userRecord.toJSON();
+//             console.log('Successfully fetched user data:', userRecord.toJSON());
 
-        })
-        .catch(function (error) {
-            console.log('Error fetching user data:', error);
-        });
-})
+//             admin.database().ref('user/' + userRec.uid + '/cart/' + req.query.key).set({
+//                 amount: req.query.amount,
+//             })
+//         })
+//         .catch(function (error) {
+//             console.log('Error fetching user data:', error);
+//         });
+// })
 
 
 exports.getBook = functions.https.onRequest(async (req, res) => {
