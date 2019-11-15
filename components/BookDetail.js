@@ -13,8 +13,30 @@ export default class BookDetail extends Component {
             firebase.initializeApp(config);
         }
         this.state = {
-            books: []
+            books: [],
+            login: false,
+            amount: ''
         }
+    }
+
+    listenForAuthChange() {
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("auth changed");
+            if (user) {
+                console.log("User details", user);
+                this.setState({ name: user.email });
+
+            } else {
+                console.log("no one is signed in ");
+                this.setState({
+                    name: "Anonymous",
+                    login: false
+                });
+            }
+        });
+    }
+    componentDidMount() {
+        this.listenForAuthChange();
     }
 
     componentWillMount() {
@@ -26,6 +48,18 @@ export default class BookDetail extends Component {
         console.log("state" + this.state.books);
     }
 
+    checklogin() {
+        if (this.state.login) {
+            return (<View><TextInput keyboardType='phone-pad' style={styles.amount} />
+                {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
+                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
+                    Add to cart
+</Button></View>)
+        }
+        else {
+            return (<View style={{ marginTop: 20, marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}><Text>Please log in first to purchase books</Text></View>)
+        }
+    }
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -46,11 +80,7 @@ export default class BookDetail extends Component {
                             <Text style={{ marginTop: 30 }}>บาท</Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 40, }}>
-                            <TextInput keyboardType='phone-pad' style={styles.amount} />
-                            {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
-                            <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
-                                Add to cart
-  </Button>
+                            {this.checklogin()}
                         </View>
                         <View style={styles.pricetext}>
                             <Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 40 }}>จำนวนของที่มี : </Text>
