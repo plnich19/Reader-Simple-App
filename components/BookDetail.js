@@ -60,7 +60,11 @@ export default class BookDetail extends Component {
         if (this.state.login) {
             return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount} />
                 <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addtoCart(
-                    key)}>
+                    key, this.state.books.nameth,
+                    this.state.books.nameen,
+                    this.state.books.author,
+                    this.state.books.price,
+                    this.state.books.cover)}>
                     Add to cart
 </Button></View>)
         }
@@ -69,7 +73,7 @@ export default class BookDetail extends Component {
         }
     }
 
-    addtoCart(key) {
+    addtoCart(key, nameth, nameen, author, price, cover) {
         this.setState({ add: true })
         if (this.state.add && this.state.amount < this.state.books.stock) {
             var user = firebase.auth().currentUser;
@@ -78,7 +82,12 @@ export default class BookDetail extends Component {
             }
             console.log("uid = ", uid)
             firebase.database().ref('user/' + uid + '/cart/' + key).set({
-                amount: this.state.amount
+                amount: this.state.amount,
+                nameth: nameth,
+                nameen: nameen,
+                author: author,
+                price: price,
+                cover: cover
             }).then((res) => {
                 console.log("added")
             }).catch((error) => {

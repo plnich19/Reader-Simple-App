@@ -3,9 +3,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
-import { connect } from 'react-redux';
-import * as actions from '../actions/index.js';
-import API from '../API.js';
 import Emoji from 'react-native-emoji';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -19,21 +16,12 @@ export default class HotBook extends Component {
             books: [],
         }
     }
-    getBook = async () => {
-        await API('getBook', 'noneed').then((data) => {
-            this.setState({ books: data });
-        })
-    }
     componentWillMount() {
-        // this.props.fetchData();
-        // this.getBook();
         firebase.database().ref('books/').once('value', (snap) => {
             this.setState({ books: snap.val() })
         })
-        //console.log("state" + this.state.books);
     }
     renderBooks() {
-        // this.getBook();
         let books = [];
         if (this.state.books) {
             Object.keys(this.state.books).map((key, index) => {
