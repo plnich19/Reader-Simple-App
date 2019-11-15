@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableHighlight } from "react-native";
-import { Button } from 'react-native-paper';
 import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
@@ -121,7 +120,7 @@ export default class BookDetail extends Component {
                         </View>
                         <View style={styles.pricetext}>
                             <Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 40 }}>จำนวนของที่มี : </Text>
-                            <Text style={{ marginTop: 12, color: '#009DFF', fontWeight: 'bold', marginBottom: 40 }}>{this.state.books.stock}</Text>
+                            <Text style={{ marginTop: 12, color: 'red', fontWeight: 'bold', marginBottom: 40 }}>{this.state.books.stock}</Text>
                         </View>
                     </View>
                     <View style={styles.other}>
@@ -167,7 +166,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     author: {
-        color: '#009DFF',
+        color: 'red',
         fontSize: 20,
         marginLeft: 15,
         marginRight: 15,
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
     },
     price: {
         fontSize: 29,
-        color: '#009DFF',
+        color: 'red',
         marginTop: 20,
         marginRight: 10,
         marginLeft: 10
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
     amountbutton: {
         marginTop: 30,
         marginLeft: 10,
-        // backgroundColor: '#922B21',
+        backgroundColor: '#922B21',
         height: 40,
         justifyContent: 'center',
     },
