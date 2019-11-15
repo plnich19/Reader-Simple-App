@@ -5,6 +5,7 @@ import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
+import API from "../API.js";
 
 export default class BookDetail extends Component {
     constructor(props) {
@@ -15,7 +16,8 @@ export default class BookDetail extends Component {
         this.state = {
             books: [],
             login: false,
-            amount: ''
+            amount: '',
+            name: ''
         }
     }
 
@@ -48,11 +50,44 @@ export default class BookDetail extends Component {
         console.log("state" + this.state.books);
     }
 
+    updateAmount = amount => {
+        this.setState({ amount });
+    };
+
+    addtoCart(key, nameth, nameen, author, price, cover, amount) {
+        console.log("key", key)
+        console.log("nameth = ", nameth)
+        console.log("nameen = ", nameen)
+        console.log("author ", author)
+        console.log("price = ", price)
+        console.log("cover = ", cover)
+        console.log("amonth = ", this.state.amount)
+        console.log("email = ", this.state.name)
+        console.log(typeof (email))
+        API('addtoCart', key, nameth, nameen, author, price, cover, this.state.amount, this.state.name);
+        // firebase.database().ref('user/' + '131' + '/cart/' + key).set({
+        //     nameth: 'nameth',
+        //     nameen: 'nameen',
+        //     author: 'author',
+        //     price: 12,
+        //     amount: this.state.amount,
+        //     cover: 'cover'
+        // })
+
+    }
+
     checklogin() {
+        const { params } = this.props.navigation.state;
+        const key = params ? params.key : null;
         if (this.state.login) {
-            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} />
-                {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
-                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
+            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount} />
+                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={this.addtoCart(
+                    key, this.state.books.nameth,
+                    this.state.books.nameen,
+                    this.state.books.author,
+                    this.state.books.price,
+                    this.state.books.cover,
+                    this.state.books.amount)}>
                     Add to cart
 </Button></View>)
         }
