@@ -91,6 +91,22 @@ export default class myCart extends Component {
         })
     }
 
+    deleteItems(key) {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        firebase.database().ref('user/' + uid + '/cart/' + key).remove().then((res) => {
+            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+            //make changes to ingredients
+            delete cartsCopy[key]
+            this.setState({
+                carts: cartsCopy
+            })
+            console.log("deduct")
+        }).catch((error) => {
+            console.log("error deducted", error)
+        })
+    }
+
     renderCarts() {
         let carts = [];
         if (this.state.carts) {
@@ -103,18 +119,26 @@ export default class myCart extends Component {
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
                     </View>
-                    <View>
-                        <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.deductItems(
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
+
+                        <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deductItems(
                             key)}>
-                            -
-                        </Button>
-                        <TextInput style={styles.author} value={this.state.carts[key].amount}></TextInput>
-                        <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addItems(
+                            <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
+                        </TouchableOpacity>
+                        <TextInput style={{ width: 40, height: 40, marginRight: 10 }} value={this.state.carts[key].amount}></TextInput>
+                        <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.addItems(
                             key)}>
-                            +
-                        </Button>
+                            <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deleteItems(
+                            key)}>
+                            <Text style={{ fontWeight: 'bold', color: 'white' }}> x </Text>
+                        </TouchableOpacity>
 
                     </View>
+
                 </View>)
             })
             return carts;
@@ -143,7 +167,7 @@ const styles = StyleSheet.create({
     choicename: {
         fontSize: 30,
         fontWeight: 'bold',
-        marginLeft: 30,
+        marginLeft: 20,
         marginBottom: 30
     }, bookpanel: {
         flexWrap: 'wrap',
@@ -155,14 +179,14 @@ const styles = StyleSheet.create({
         marginBottom: 25
     },
     detailtext: {
-        width: 150
+        width: 175
     },
     bookcover: {
         width: 50,
         height: 75,
-        marginLeft: 20,
+        marginLeft: 10,
         marginBottom: 10,
-        marginRight: 40
+        marginRight: 20
     },
     title: {
         fontSize: 16,
@@ -174,12 +198,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'grey',
     },
-    amountbutton: {
-        marginTop: 30,
-        marginLeft: 10,
-        // backgroundColor: '#922B21',
-        height: 40,
-        justifyContent: 'center',
+    adddeductbutton: {
+        backgroundColor: '#7001FA', width: 25, height: 25, marginRight: 10, justifyContent: 'center', alignContent: 'center', alignItems: 'center', alignSelf: 'center', borderRadius: 4
     },
 
 })
