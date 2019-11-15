@@ -24,7 +24,7 @@ export default class BookDetail extends Component {
             console.log("auth changed");
             if (user) {
                 console.log("User details", user);
-                this.setState({ name: user.email });
+                this.setState({ login: true, name: user.email });
 
             } else {
                 console.log("no one is signed in ");
@@ -50,14 +50,14 @@ export default class BookDetail extends Component {
 
     checklogin() {
         if (this.state.login) {
-            return (<View><TextInput keyboardType='phone-pad' style={styles.amount} />
+            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} />
                 {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
                 <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
                     Add to cart
 </Button></View>)
         }
         else {
-            return (<View style={{ marginTop: 20, marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}><Text>Please log in first to purchase books</Text></View>)
+            return (<View style={{ marginTop: 20, marginLeft: 10 }}><Text style={{ fontSize: 15, fontWeight: 'bold' }}>Please log in first to purchase books</Text></View>)
         }
     }
     render() {
@@ -79,7 +79,7 @@ export default class BookDetail extends Component {
                             <Text style={styles.price}>{this.state.books.price}</Text>
                             <Text style={{ marginTop: 30 }}>บาท</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 40, }}>
+                        <View>
                             {this.checklogin()}
                         </View>
                         <View style={styles.pricetext}>
