@@ -18,7 +18,7 @@ export default class BookDetail extends Component {
             login: false,
             amount: '',
             name: '',
-            add: true
+            add: false
         }
     }
 
