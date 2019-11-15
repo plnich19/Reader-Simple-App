@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
-import { Button, TextInput } from 'react-native-paper';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
@@ -46,12 +45,19 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
+            // var userinfo = firebase.auth().currentUser;
+            // if (userinfo != null) {
+            //     var uid = userinfo.uid;
+            //     console.log("User details", userinfo);
+            // this.setState({ uid: uid }, () => {
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                console.log(snap.val())
                 const data = snap.val()
                 this.setState({
                     carts: data
                 });
             });
+            // })
         }
     }
 
@@ -170,10 +176,10 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginBottom: 30
     }, bookpanel: {
+        flexDirection: 'row',
         flexWrap: 'wrap',
     },
     detail: {
-        flexDirection: 'row',
         marginLeft: 20,
         marginRight: 15,
         marginBottom: 25
@@ -190,6 +196,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
+        textAlign: 'center',
         fontWeight: 'bold',
         color: 'black'
     },

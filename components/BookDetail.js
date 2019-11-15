@@ -16,7 +16,7 @@ export default class BookDetail extends Component {
         this.state = {
             books: [],
             login: false,
-            amount: 0,
+            amount: '',
             name: '',
             add: true
         }
@@ -75,29 +75,27 @@ export default class BookDetail extends Component {
 
     addtoCart(key, nameth, nameen, author, price, cover) {
         this.setState({ add: true })
-        if (this.state.add) {
-            if (parseInt(this.state.amount) <= this.state.books.stock) {
-                var user = firebase.auth().currentUser;
-                if (user != null) {
-                    var uid = user.uid;
-                }
-                console.log("uid = ", uid)
-                firebase.database().ref('user/' + uid + '/cart/' + key).set({
-                    amount: parseInt(this.state.amount),
-                    nameth: nameth,
-                    nameen: nameen,
-                    author: author,
-                    price: price,
-                    cover: cover
-                }).then((res) => {
-                    console.log("added")
-                }).catch((error) => {
-                    console.log("error added", error)
-                })
+        if (this.state.add && this.state.amount < this.state.books.stock) {
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+                var uid = user.uid;
             }
-            else {
-                alert('YOUR PURCHASE EXCEED OUR STOCK')
-            }
+            console.log("uid = ", uid)
+            firebase.database().ref('user/' + uid + '/cart/' + key).set({
+                amount: this.state.amount,
+                nameth: nameth,
+                nameen: nameen,
+                author: author,
+                price: price,
+                cover: cover
+            }).then((res) => {
+                console.log("added")
+            }).catch((error) => {
+                console.log("error added", error)
+            })
+        }
+        else {
+            alert('YOUR PURCHASE EXCEED OUR STOCK')
         }
         console.log("key", key)
         console.log("amonth = ", this.state.amount)
