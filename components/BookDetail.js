@@ -4,6 +4,7 @@ import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
+import API from "../API.js";
 
 export default class BookDetail extends Component {
     constructor(props) {
@@ -12,8 +13,32 @@ export default class BookDetail extends Component {
             firebase.initializeApp(config);
         }
         this.state = {
-            books: []
+            books: [],
+            login: false,
+            amount: '',
+            name: '',
+            add: false
         }
+    }
+
+    listenForAuthChange() {
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("auth changed");
+            if (user) {
+                console.log("User details", user);
+                this.setState({ login: true, name: user.email });
+
+            } else {
+                console.log("no one is signed in ");
+                this.setState({
+                    name: "Anonymous",
+                    login: false
+                });
+            }
+        });
+    }
+    componentDidMount() {
+        this.listenForAuthChange();
     }
 
     componentWillMount() {
@@ -25,6 +50,56 @@ export default class BookDetail extends Component {
         console.log("state" + this.state.books);
     }
 
+    updateAmount = amount => {
+        this.setState({ amount });
+    };
+    checklogin() {
+        const { params } = this.props.navigation.state;
+        const key = params ? params.key : null;
+        if (this.state.login) {
+            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount} />
+                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addtoCart(
+                    key, this.state.books.nameth,
+                    this.state.books.nameen,
+                    this.state.books.author,
+                    this.state.books.price,
+                    this.state.books.cover)}>
+                    Add to cart
+</Button></View>)
+        }
+        else {
+            return (<View style={{ marginTop: 20, marginLeft: 10 }}><Text style={{ fontSize: 15, fontWeight: 'bold' }}>Please log in first to purchase books</Text></View>)
+        }
+    }
+
+    addtoCart(key, nameth, nameen, author, price, cover) {
+        this.setState({ add: true })
+        if (this.state.add && this.state.amount < this.state.books.stock) {
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+                var uid = user.uid;
+            }
+            console.log("uid = ", uid)
+            firebase.database().ref('user/' + uid + '/cart/' + key).set({
+                amount: this.state.amount,
+                nameth: nameth,
+                nameen: nameen,
+                author: author,
+                price: price,
+                cover: cover
+            }).then((res) => {
+                console.log("added")
+            }).catch((error) => {
+                console.log("error added", error)
+            })
+        }
+        else {
+            alert('YOUR PURCHASE EXCEED OUR STOCK')
+        }
+        console.log("key", key)
+        console.log("amonth = ", this.state.amount)
+        console.log("email = ", this.state.name)
+    }
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -44,12 +119,8 @@ export default class BookDetail extends Component {
                             <Text style={styles.price}>{this.state.books.price}</Text>
                             <Text style={{ marginTop: 30 }}>บาท</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 40, }}>
-                            <TextInput keyboardType='phone-pad' style={styles.amount} />
-                            {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
-                            <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
-                                Add to cart
-  </Button>
+                        <View>
+                            {this.checklogin()}
                         </View>
                         <View style={styles.pricetext}>
                             <Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 40 }}>จำนวนของที่มี : </Text>

@@ -10,7 +10,8 @@ export default class Menu extends Component {
         super(props);
         this.state = {
             login: false,
-            snack: false
+            snack: false,
+            uid: ''
         }
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
@@ -22,6 +23,13 @@ export default class Menu extends Component {
             if (user) {
                 console.log("User details", user);
                 this.setState({ login: true });
+                var userinfo = firebase.auth().currentUser;
+                if (userinfo != null) {
+                    var uid = userinfo.uid;
+                    console.log("User details", userinfo);
+                    this.setState({ uid: uid });
+                }
+
             } else {
                 console.log("no one is signed in ");
                 this.setState({
@@ -97,7 +105,7 @@ export default class Menu extends Component {
     SignInToggle() {
         if (this.state.login) {
             return (<View>
-                <TouchableOpacity ><Text style={styles.loginbuttontext}>My Cart</Text></TouchableOpacity>
+                <TouchableOpacity ><Text style={styles.loginbuttontext} onPress={() => this.props.navigation.navigate('myCart', { uid: this.state.uid })}>My Cart</Text></TouchableOpacity>
                 <TouchableOpacity onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableOpacity></View>)
         }
         else {
