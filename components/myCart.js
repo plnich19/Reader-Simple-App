@@ -9,7 +9,7 @@ import API from '../API.js';
 import Emoji from 'react-native-emoji';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default class HotBook extends Component {
+export default class myCart extends Component {
     render() {
         return;
     }

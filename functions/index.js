@@ -3,6 +3,30 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+
+exports.addtoCart = functions.https.onRequest(async (req, res) => {
+    console.log(req.query.email)
+    return admin.auth().getUserByEmail(req.query.email)
+        .then(function (userRecord) {
+            // See the UserRecord reference doc for the contents of userRecord.
+            const userRec = userRecord.toJSON();
+            console.log('Successfully fetched user data:', userRec.uid);
+            admin.database().ref('users/' + userRec.uid + '/cart/' + req.query.key).set({
+                nameth: req.query.nameth,
+                nameen: req.query.nameen,
+                author: req.query.author,
+                cover: req.query.cover,
+                price: req.query.price,
+                amount: req.query.amount
+            });
+        }).then((data) => {
+            console.log('added done')
+        }).catch((error) => {
+            console.log('Error add  user data:', error);
+        });
+
+}
+)
 exports.getBook = functions.https.onRequest(async (req, res) => {
     return admin.database().ref('books/').once('value', (snapshot) => {
         let obj = [];

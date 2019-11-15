@@ -5,6 +5,11 @@ import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
+import API from '../API.js';
+
+// import * as admin from 'firebase-admin';
+
+// admin.initializeApp();
 
 export default class BookDetail extends Component {
     constructor(props) {
@@ -13,8 +18,31 @@ export default class BookDetail extends Component {
             firebase.initializeApp(config);
         }
         this.state = {
-            books: []
+            login: false,
+            books: [],
+            name: '',
+            uid: '',
+            amount: ''
         }
+    }
+    listenForAuthChange() {
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("auth changed");
+            if (user) {
+                console.log("User details", user);
+                this.setState({ login: true });
+                this.setState({ name: user.email });
+            } else {
+                console.log("no one is signed in ");
+                this.setState({
+                    name: "Anonymous",
+                    login: false
+                });
+            }
+        });
+    }
+    componentDidMount() {
+        this.listenForAuthChange();
     }
 
     componentWillMount() {
@@ -25,6 +53,43 @@ export default class BookDetail extends Component {
         })
         console.log("state" + this.state.books);
     }
+
+    addtocart(key, nameth, nameen, author, cover, price, amount) {
+        console.log(key)
+        API('addtoCart', this.state.name, key, nameth, nameen, author, cover, price, amount).then((data) => {
+            alert('ADDED');
+        })
+
+        // var user = firebase.auth().currentUser;
+        // if (user) {
+        //     firebase.database().ref('users/').child(name).child('cart').child(key).push({
+        //         nameth: nameth,
+        //         nameen: nameen,
+        //         author: author,
+        //         cover: cover,
+        //         price: price,
+        //         amount: amount
+        //     });
+        // }
+    }
+
+    updateAmuont = amount => {
+        this.setState({ amount });
+    };
+    checkLogin = () => {
+        const { params } = this.props.navigation.state;
+        const key = params ? params.key : null;
+        if (this.state.login) {
+            return (<View>
+                <TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmuont} value={this.state.amount} />
+                <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() =>
+                    this.addtocart(key, this.state.books.nameth, this.state.books.nameen, this.state.books.author, this.state.books.cover, this.state.books.price, this.state.amount)}
+                >
+                    Add to cart
+            </Button>
+            </View>);
+        }
+    };
 
     render() {
         return (
@@ -46,11 +111,13 @@ export default class BookDetail extends Component {
                             <Text style={{ marginTop: 30 }}>บาท</Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginBottom: 40, }}>
-                            <TextInput keyboardType='phone-pad' style={styles.amount} />
-                            {/* <TouchableHighlight style={styles.amountbutton}><Text style={styles.cartbuttontext}>เพิ่มในรถเข็น</Text></TouchableHighlight> */}
-                            <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => console.log('Pressed')}>
+                            {this.checkLogin()}
+                            {/* <TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmuont} value={this.state.amount} />
+                            <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={
+                                this.addtocart(key, this.state.books.nameth, this.state.books.nameen, this.state.books.author, this.state.books.cover, this.state.books.price, this.state.amount)}
+                            >
                                 Add to cart
-  </Button>
+  </Button> */}
                         </View>
                         <View style={styles.pricetext}>
                             <Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 40 }}>จำนวนของที่มี : </Text>
