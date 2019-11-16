@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase';
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput, Button, Snackbar } from 'react-native-paper'
 import _ from 'lodash';
 import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
@@ -19,7 +19,10 @@ export default class myCart extends Component {
             amount: '',
             name: '',
             uid: '',
-            total: 0
+            total: 0,
+            snack: true,
+            submit: false,
+            allow: true,
         }
     }
 
@@ -32,7 +35,9 @@ export default class myCart extends Component {
                 console.log("no one is signed in ");
                 this.setState({
                     name: "Anonymous",
-                    login: false
+                    login: false,
+                    carts: [],
+                    submit: false
                 });
             }
         }
@@ -57,7 +62,8 @@ export default class myCart extends Component {
                 const data = snap.val()
                 if (data != null) {
                     this.setState({
-                        carts: data
+                        carts: data,
+                        submit: true
                     });
                 }
             });
@@ -71,15 +77,25 @@ export default class myCart extends Component {
         firebase.database().ref('user/' + uid + '/cart/' + key).update({
             amount: this.state.carts[key].amount + 1
         }).then((res) => {
-            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            //make changes to ingredients
-            cartsCopy[key].amount = this.state.carts[key].amount + 1//whatever new ingredients are
-            this.setState({
-                carts: cartsCopy
-            })
             console.log("added")
         }).catch((error) => {
             console.log("error added", error)
+        })
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+            console.log(snap.val())
+            const data = snap.val()
+            if (data != null) {
+                this.setState({
+                    carts: snap.val(),
+                    submit: true
+                });
+            }
+            else {
+                this.setState({
+                    carts: [],
+                    submit: false
+                })
+            }
         })
     }
 
@@ -89,15 +105,31 @@ export default class myCart extends Component {
         firebase.database().ref('user/' + uid + '/cart/' + key).update({
             amount: this.state.carts[key].amount - 1
         }).then((res) => {
-            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            //make changes to ingredients
-            cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
-            this.setState({
-                carts: cartsCopy
-            })
+            // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+            // //make changes to ingredients
+            // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
+            // this.setState({
+            //     carts: cartsCopy
+            // })
             console.log("deduct")
         }).catch((error) => {
             console.log("error deducted", error)
+        })
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+            console.log(snap.val())
+            const data = snap.val()
+            if (data != null) {
+                this.setState({
+                    carts: snap.val(),
+                    submit: true
+                });
+            }
+            else {
+                this.setState({
+                    carts: [],
+                    submit: false
+                })
+            }
         })
     }
 
@@ -122,7 +154,8 @@ export default class myCart extends Component {
             }
             else {
                 this.setState({
-                    carts: []
+                    carts: [],
+                    submit: false
                 })
             }
         }
@@ -130,17 +163,85 @@ export default class myCart extends Component {
         //this.CalTotal()
     }
 
-    redirect(uid) {
-        const { navigate } = this.props.navigation;
-        // alert('Welcome! ' + this.state.email)
-        navigate('myCart2', { uid: uid })
+    snack() {
+        if (this.state.snack) {
+            if (this.state.message) {
+                let duration = 10000
+                return (<View><Snackbar
+                    duration={duration}
+                    style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+                    visible={this.state.snack}
+                    onDismiss={() => this.setState({ snack: false })}
+                    action={{
+                        label: 'Yeah!',
+                        onPress: () => {
+                            this.setState({ snack: false })
+                        },
+                    }}
+                >
+                    Your purchase is successful <Emoji name="two_hearts" />
+                </Snackbar>
+                </View>)
+            }
+            else {
+                return (<View>
+                    <Snackbar
+                        style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                        visible={this.state.snack}
+                        onDismiss={() => this.setState({ snack: false })}
+                        action={{
+                            label: 'Got it',
+                            onPress: () => {
+                                this.setState({ snack: false })
+                            },
+                        }}
+                    >
+                        Sorry! Can't make purchase.
+                    </Snackbar>
+                </View>)
+            }
+        }
+
     }
+
+    checkSubmit() {
+        if (parseInt(this.state.amount) <= this.state.books.stock) {
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+                var uid = user.uid;
+            }
+            console.log("uid = ", uid)
+            firebase.database().ref('user/' + uid + '/cart/' + key).set({
+                amount: parseInt(this.state.amount),
+                nameth: nameth,
+                nameen: nameen,
+                author: author,
+                price: price,
+                cover: cover
+            }).then((res) => {
+                this.setState({ snack: true, message: true })
+                //this.snack('added')
+                console.log("added")
+            }).catch((error) => {
+                console.log("error added", error)
+            })
+
+        }
+        else {
+            // alert('YOUR PURCHASE EXCEED OUR STOCK')
+            this.setState({ snack: true, message: false })
+            //this.snack('404')
+
+        }
+    }
+
 
     renderCarts() {
 
         console.log("caetttttttt", this.state.carts);
         let carts = [];
         if (this.state.carts.length == 0) {
+
             return (<View style={{ justifyContent: 'center' }}>
                 <Text style={styles.notfound}>Nothing in your carts right now</Text>
                 <View style={{ marginLeft: 30, marginRight: 30 }}>
@@ -159,31 +260,36 @@ export default class myCart extends Component {
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
+
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
+                        <View>
+                            <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
+                                key)}>
+                                <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
+                            </TouchableOpacity>
+                        </View>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deductItems(
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
                         </TouchableOpacity>
-                        <TextInput style={{ width: 40, height: 40, marginRight: 10 }} value={this.state.carts[key].amount.toString()}></TextInput>
+                        {/* <TextInput style={{ width: 40, height: 40, marginRight: 5 }} value={this.state.carts[key].amount.toString()}></TextInput> */}
+                        <Text styles={{ marginRight: 10, fontSize: 15 }}>{this.state.carts[key].amount}</Text>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.addItems(
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
-
-
-                        <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deleteItems(
-                            key)}>
-                            <Text style={{ fontWeight: 'bold', color: 'white' }}> x </Text>
-                        </TouchableOpacity>
                         <View>
+                            {/* <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
+                                key)}>
+                                <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
+                            </TouchableOpacity> */}
 
                         </View>
                     </View>
                 </View>)
 
             })
-            //this.setState({ total: this.state.total + this.state.carts[key].price });
             return carts;
         }
     }
@@ -202,7 +308,15 @@ export default class myCart extends Component {
         else {
             return;
         }
-        // Note: this will *not* work as intended.
+    }
+
+    renderSubmitButton() {
+        if (this.state.submit) {
+            return (<View styles={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
+                <Button icon="credit-card" mode="contained" onPress={() => this.snack('confirm')}>
+                    CONFIRM
+                </Button></View>)
+        }
     }
 
     render() {
@@ -214,6 +328,7 @@ export default class myCart extends Component {
                     <View style={styles.bookpanel}>
                         {this.renderCarts()}
                         {this.CalTotal()}
+                        {this.renderSubmitButton()}
                     </View>
                 </View>
             </ScrollView>
@@ -223,6 +338,7 @@ export default class myCart extends Component {
 
 const styles = StyleSheet.create({
     hotbar: {
+        flex: 1,
         marginTop: 50,
     },
     choicename: {
@@ -235,7 +351,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     detail: {
-        marginLeft: 20,
+        flexDirection: 'row',
         marginRight: 15,
         marginBottom: 25
     },
@@ -261,7 +377,25 @@ const styles = StyleSheet.create({
         color: 'grey',
     },
     adddeductbutton: {
-        backgroundColor: '#7001FA', width: 25, height: 25, marginRight: 10, justifyContent: 'center', alignContent: 'center', alignItems: 'center', alignSelf: 'center', borderRadius: 4
+        backgroundColor: '#7001FA',
+        width: 25,
+        height: 25,
+        marginLeft: 10,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderRadius: 4
+    },
+    deletebutton: {
+        width: 20,
+        height: 25,
+        justifyContent: 'flex-start',
+        alignContent: 'flex-start',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        borderRadius: 4
     },
     notfound: {
         marginTop: 30,
@@ -275,7 +409,8 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: 20,
         fontWeight: 'bold',
-        marginRight: 15
+        marginRight: 30,
+        marginBottom: 30
     }
 
 })

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { withNavigation } from 'react-navigation';
 import * as firebase from 'firebase';
 import _ from 'lodash';
@@ -24,7 +24,9 @@ export default class Find extends Component {
             Object.keys(key).map(obj =>
                 panel.push(
                     <View style={styles.detail}>
-                        <Image style={styles.bookcover} source={{ uri: key[obj].cover }}></Image>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('BookDetail', { key: obj })}>
+                            <Image style={styles.bookcover} source={{ uri: key[obj].cover }}></Image>
+                        </TouchableOpacity>
                         <View style={styles.detailtext}>
                             <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: obj })}>{key[obj].nameth}</Text>
                             <Text style={styles.author}>{key[obj].author}</Text>

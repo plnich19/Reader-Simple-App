@@ -74,6 +74,7 @@ export default class HotBook extends Component {
 
 const styles = StyleSheet.create({
     hotbar: {
+        flex: 1,
         marginTop: 50,
     },
     choicename: {
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     },
     detail: {
         marginLeft: 20,
-        marginRight: 15,
+        // marginRight: 15,
         marginBottom: 25
     },
     detailtext: {
