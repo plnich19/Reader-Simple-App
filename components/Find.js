@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { withNavigation } from 'react-navigation';
-import * as firebase from 'firebase';
 import _ from 'lodash';
 import { ScrollView } from "react-native-gesture-handler";
+
 import Navigation from './Navigation.js';
 
 export default class Find extends Component {
@@ -34,21 +33,12 @@ export default class Find extends Component {
                     </View>)
             );
         }
-
         );
         return panel;
-
-
     }
 
-
-
     render() {
-        // const { params } = this.props.navigation.state;
-        // const { isbn } = params ? params.isbn : null;
         const isbn = this.props.navigation.getParam('isbn', []);
-        console.log(typeof (isbn));
-        console.log("2", isbn)
         var array = JSON.parse(isbn);
 
         return (
