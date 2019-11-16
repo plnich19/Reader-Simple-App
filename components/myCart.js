@@ -22,6 +22,7 @@ export default class myCart extends Component {
             total: 0,
             snack: true,
             submit: false,
+            allow: true,
         }
     }
 
@@ -153,7 +154,8 @@ export default class myCart extends Component {
             }
             else {
                 this.setState({
-                    carts: []
+                    carts: [],
+                    submit: false
                 })
             }
         }
@@ -232,6 +234,7 @@ export default class myCart extends Component {
 
         }
     }
+
 
     renderCarts() {
 
@@ -386,11 +389,10 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
     deletebutton: {
-        width: 10,
+        width: 20,
         height: 25,
-        marginTop: -5,
-        justifyContent: 'center',
-        alignContent: 'center',
+        justifyContent: 'flex-start',
+        alignContent: 'flex-start',
         alignItems: 'center',
         alignSelf: 'flex-start',
         borderRadius: 4
