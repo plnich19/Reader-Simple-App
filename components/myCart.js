@@ -104,17 +104,22 @@ export default class myCart extends Component {
     deleteItems = async (key) => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
+        this.setState({ carts: [] });
         firebase.database().ref('user/' + uid + '/cart/' + key).remove().then(function (data) {
             console.log("delete")
         }).catch((error) => {
             console.log("error deducted", error)
         })
         //this.redirect(uid)
-        if (this.state.carts == null) {
-            this.setState({
-                carts: []
-            })
-        }
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+            console.log(snap.val())
+            const data1 = snap.val()
+            if (data1 != null) {
+                this.setState({
+                    carts: snap.val()
+                });
+            }
+        });
     }
 
     redirect(uid) {
