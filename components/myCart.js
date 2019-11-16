@@ -20,7 +20,8 @@ export default class myCart extends Component {
             name: '',
             uid: '',
             total: 0,
-            snack: true
+            snack: true,
+            submit: false,
         }
     }
 
@@ -34,7 +35,8 @@ export default class myCart extends Component {
                 this.setState({
                     name: "Anonymous",
                     login: false,
-                    carts: []
+                    carts: [],
+                    submit: false
                 });
             }
         }
@@ -59,7 +61,8 @@ export default class myCart extends Component {
                 const data = snap.val()
                 if (data != null) {
                     this.setState({
-                        carts: data
+                        carts: data,
+                        submit: true
                     });
                 }
             });
@@ -82,12 +85,14 @@ export default class myCart extends Component {
             const data = snap.val()
             if (data != null) {
                 this.setState({
-                    carts: snap.val()
+                    carts: snap.val(),
+                    submit: true
                 });
             }
             else {
                 this.setState({
-                    carts: []
+                    carts: [],
+                    submit: false
                 })
             }
         })
@@ -114,12 +119,14 @@ export default class myCart extends Component {
             const data = snap.val()
             if (data != null) {
                 this.setState({
-                    carts: snap.val()
+                    carts: snap.val(),
+                    submit: true
                 });
             }
             else {
                 this.setState({
-                    carts: []
+                    carts: [],
+                    submit: false
                 })
             }
         })
@@ -231,6 +238,7 @@ export default class myCart extends Component {
         console.log("caetttttttt", this.state.carts);
         let carts = [];
         if (this.state.carts.length == 0) {
+
             return (<View style={{ justifyContent: 'center' }}>
                 <Text style={styles.notfound}>Nothing in your carts right now</Text>
                 <View style={{ marginLeft: 30, marginRight: 30 }}>
@@ -249,8 +257,15 @@ export default class myCart extends Component {
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
+
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
+                        <View>
+                            <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
+                                key)}>
+                                <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
+                            </TouchableOpacity>
+                        </View>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deductItems(
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
@@ -262,10 +277,10 @@ export default class myCart extends Component {
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
                         <View>
-                            <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
+                            {/* <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
                                 key)}>
                                 <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                         </View>
                     </View>
@@ -293,7 +308,7 @@ export default class myCart extends Component {
     }
 
     renderSubmitButton() {
-        if (this.state.carts.length > 0) {
+        if (this.state.submit) {
             return (<View styles={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
                 <Button icon="credit-card" mode="contained" onPress={() => this.snack('confirm')}>
                     CONFIRM
