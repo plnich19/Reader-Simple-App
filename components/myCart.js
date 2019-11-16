@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase';
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput, Button, Snackbar } from 'react-native-paper'
 import _ from 'lodash';
 import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
@@ -19,7 +19,8 @@ export default class myCart extends Component {
             amount: '',
             name: '',
             uid: '',
-            total: 0
+            total: 0,
+            snack: true
         }
     }
 
@@ -32,7 +33,8 @@ export default class myCart extends Component {
                 console.log("no one is signed in ");
                 this.setState({
                     name: "Anonymous",
-                    login: false
+                    login: false,
+                    carts: []
                 });
             }
         }
@@ -152,10 +154,25 @@ export default class myCart extends Component {
         //this.CalTotal()
     }
 
-    redirect(uid) {
-        const { navigate } = this.props.navigation;
-        // alert('Welcome! ' + this.state.email)
-        navigate('myCart2', { uid: uid })
+    snack(action) {
+        this.setState({ snack: true });
+        console.log('snack');
+        if (action == 'confirm' && this.state.snack) {
+            console.log('snack2')
+            return (<View><Snackbar
+                style={{ backgroundColor: '#B20000' }}
+                visible={this.state.snack}
+                onDismiss={() => this.setState({ snack: false })}
+                action={{
+                    label: 'Yeah!',
+                    onPress: () => {
+                        this.setState({ snack: false })
+                    },
+                }}
+            >
+                Your payment is successful!
+            </Snackbar></View>)
+        }
     }
 
     renderCarts() {
@@ -225,9 +242,10 @@ export default class myCart extends Component {
 
     renderSubmitButton() {
         if (this.state.carts.length > 0) {
-            return (<View><Button icon="credit-card" mode="contained" onPress={() => console.log('submit')}>
-                CONFIRM
-</Button></View>)
+            return (<View styles={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
+                <Button icon="credit-card" mode="contained" onPress={() => this.snack('confirm')}>
+                    CONFIRM
+                </Button></View>)
         }
     }
 
@@ -302,10 +320,9 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         marginTop: -5,
-        marginRight: 10,
         justifyContent: 'center',
         alignContent: 'center',
-        alignItems: '',
+        alignItems: 'center',
         alignSelf: 'flex-end',
         borderRadius: 4
     },
@@ -321,7 +338,8 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: 20,
         fontWeight: 'bold',
-        marginRight: 30
+        marginRight: 30,
+        marginBottom: 30
     }
 
 })

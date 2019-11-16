@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableHighlight } from "react-native";
-import { Button } from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
+//import Snackbar from '@material-ui/core/Snackbar';
 import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
@@ -18,7 +19,9 @@ export default class BookDetail extends Component {
             login: false,
             amount: 0,
             name: '',
-            add: false
+            add: false,
+            snack: false,
+            message: false
         }
     }
 
@@ -58,7 +61,7 @@ export default class BookDetail extends Component {
         const { params } = this.props.navigation.state;
         const key = params ? params.key : null;
         if (this.state.login) {
-            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount} />
+            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount.toString()} />
                 <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addtoCart(
                     key, this.state.books.nameth,
                     this.state.books.nameen,
@@ -72,6 +75,48 @@ export default class BookDetail extends Component {
             return (<View style={{ marginTop: 20, marginLeft: 10 }}><Text style={{ fontSize: 15, fontWeight: 'bold' }}>Please log in first to purchase books</Text></View>)
         }
     }
+
+    snack() {
+        if (this.state.snack) {
+            if (this.state.message) {
+                let duration = 10000
+                return (<View><Snackbar
+                    duration={duration}
+                    style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+                    visible={this.state.snack}
+                    onDismiss={() => this.setState({ snack: false })}
+                    action={{
+                        label: 'Yeah!',
+                        onPress: () => {
+                            this.setState({ snack: false })
+                        },
+                    }}
+                >
+                    Added
+            </Snackbar>
+                </View>)
+            }
+            else {
+                return (<View>
+                    <Snackbar
+                        style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                        visible={this.state.snack}
+                        onDismiss={() => this.setState({ snack: false })}
+                        action={{
+                            label: 'Got it',
+                            onPress: () => {
+                                this.setState({ snack: false })
+                            },
+                        }}
+                    >
+                        Your purchase exceed our stock
+                    </Snackbar>
+                </View>)
+            }
+        }
+
+    }
+
 
     addtoCart(key, nameth, nameen, author, price, cover) {
         if (parseInt(this.state.amount) <= this.state.books.stock) {
@@ -88,13 +133,18 @@ export default class BookDetail extends Component {
                 price: price,
                 cover: cover
             }).then((res) => {
+                this.setState({ snack: true, message: true })
+                //this.snack('added')
                 console.log("added")
             }).catch((error) => {
                 console.log("error added", error)
             })
+
         }
         else {
-            alert('YOUR PURCHASE EXCEED OUR STOCK')
+            // alert('YOUR PURCHASE EXCEED OUR STOCK')
+            this.setState({ snack: true, message: false })
+            //this.snack('404')
         }
 
 
@@ -134,6 +184,7 @@ export default class BookDetail extends Component {
                         <Text style={styles.isbn}>ISBN : {this.state.books.isbn}</Text>
                     </View>
                 </View>
+                {this.snack()}
             </ScrollView >
         );
     }

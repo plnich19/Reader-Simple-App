@@ -104,7 +104,7 @@ export default class myCart2 extends Component {
         }).catch((error) => {
             console.log("error deducted", error)
         })
-        this.redirect(uid)
+        //this.redirect(uid)
     }
 
     redirect(uid) {
