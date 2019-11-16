@@ -18,7 +18,8 @@ export default class myCart extends Component {
             login: false,
             amount: '',
             name: '',
-            uid: ''
+            uid: '',
+            total: 0
         }
     }
 
@@ -113,13 +114,20 @@ export default class myCart extends Component {
         //this.redirect(uid)
         firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
-            const data1 = snap.val()
-            if (data1 != null) {
+            const data = snap.val()
+            if (data != null) {
                 this.setState({
                     carts: snap.val()
                 });
             }
-        });
+            else {
+                this.setState({
+                    carts: []
+                })
+            }
+        }
+        );
+        //this.CalTotal()
     }
 
     redirect(uid) {
@@ -142,6 +150,7 @@ export default class myCart extends Component {
                 </View></View>)
         }
         else {
+            var total = 0;
             Object.keys(this.state.carts).map((key, index) => {
                 carts.push(<View key={key} style={styles.detail}>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>
@@ -167,14 +176,33 @@ export default class myCart extends Component {
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> x </Text>
                         </TouchableOpacity>
+                        <View>
 
+                        </View>
                     </View>
-
                 </View>)
-            })
-            return carts;
 
+            })
+            //this.setState({ total: this.state.total + this.state.carts[key].price });
+            return carts;
         }
+    }
+
+    // Total
+
+    CalTotal() {
+        let total = 0;
+        let carts = this.state.carts;
+        Object.keys(carts).map((key, index) => {
+            total = total + (carts[key].price * carts[key].amount);
+        })
+        if (total > 0) {
+            return <Text style={styles.total}>Total: {total}</Text>;
+        }
+        else {
+            return;
+        }
+        // Note: this will *not* work as intended.
     }
 
     render() {
@@ -185,6 +213,7 @@ export default class myCart extends Component {
                     <Text style={styles.choicename}>Your cart <Emoji name="books" style={{ fontSize: 20 }} /></Text>
                     <View style={styles.bookpanel}>
                         {this.renderCarts()}
+                        {this.CalTotal()}
                     </View>
                 </View>
             </ScrollView>
@@ -241,5 +270,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 30
     },
+    total: {
+        color: '#009DFF',
+        textAlign: 'right',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginRight: 15
+    }
 
 })
