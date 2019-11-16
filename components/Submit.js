@@ -6,6 +6,7 @@ import Emoji from 'react-native-emoji';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import { ScrollView } from "react-native-gesture-handler";
+
 import Navigation from './Navigation.js';
 
 export default class Submit extends Component {

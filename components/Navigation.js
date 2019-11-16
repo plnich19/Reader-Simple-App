@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { withNavigation } from 'react-navigation';
-import Menu from "./Menu.js";
 import { LinearGradient } from 'expo-linear-gradient';
+
+import Menu from "./Menu.js";
 
 class Navigation extends Component {
     constructor(props) {
@@ -11,7 +12,6 @@ class Navigation extends Component {
             menuToggle: false,
         }
     }
-
 
     renderTopMenu() {
         if (this.state.menuToggle) {
