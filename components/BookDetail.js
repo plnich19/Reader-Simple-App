@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, View, Image, TextInput, ScrollView } from "react-native";
 import { Button, Snackbar } from 'react-native-paper';
-//import Snackbar from '@material-ui/core/Snackbar';
-import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
 import _ from 'lodash';
+
 import config from '../firebase/config.js';
-import API from "../API.js";
+import Navigation from './Navigation.js';
 
 export default class BookDetail extends Component {
     constructor(props) {
@@ -77,7 +76,6 @@ export default class BookDetail extends Component {
     }
     redirect() {
         const { navigate } = this.props.navigation;
-        // alert('Welcome! ' + this.state.email)
         navigate('myCart')
     }
     snack() {
@@ -90,7 +88,7 @@ export default class BookDetail extends Component {
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'Yeah',
+                        label: 'Yeah!',
                         onPress: () => {
                             this.setState({ snack: false })
 
@@ -122,7 +120,6 @@ export default class BookDetail extends Component {
 
     }
 
-
     addtoCart(key, nameth, nameen, author, price, cover) {
         if (parseInt(this.state.amount) <= this.state.books.stock) {
             var user = firebase.auth().currentUser;
@@ -139,23 +136,14 @@ export default class BookDetail extends Component {
                 cover: cover
             }).then((res) => {
                 this.setState({ snack: true, message: true })
-                //this.snack('added')
                 console.log("added")
             }).catch((error) => {
                 console.log("error added", error)
             })
-
         }
         else {
-            // alert('YOUR PURCHASE EXCEED OUR STOCK')
             this.setState({ snack: true, message: false })
-            //this.snack('404')
         }
-
-
-        console.log("key", key)
-        console.log("amonth = ", this.state.amount)
-        console.log("email = ", this.state.name)
     }
     render() {
         return (
