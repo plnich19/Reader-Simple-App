@@ -61,7 +61,7 @@ export default class Menu extends Component {
     snack() {
         if (this.state.snack) {
             return (<Snackbar
-                style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                style={{ backgroundColor: '#B20000' }}
                 visible={this.state.snack}
                 onDismiss={() => this.setState({ snack: false })}
                 action={{
@@ -83,7 +83,7 @@ export default class Menu extends Component {
             .signOut()
             .then(() => {
                 console.log("Logout successfully");
-                alert("Logout Successfully");
+                // alert("Logout Successfully");
                 this.setState({ login: false })
                 this.setState({ snack: true });
                 this.snack()

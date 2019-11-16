@@ -71,15 +71,23 @@ export default class myCart extends Component {
         firebase.database().ref('user/' + uid + '/cart/' + key).update({
             amount: this.state.carts[key].amount + 1
         }).then((res) => {
-            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            //make changes to ingredients
-            cartsCopy[key].amount = this.state.carts[key].amount + 1//whatever new ingredients are
-            this.setState({
-                carts: cartsCopy
-            })
             console.log("added")
         }).catch((error) => {
             console.log("error added", error)
+        })
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+            console.log(snap.val())
+            const data = snap.val()
+            if (data != null) {
+                this.setState({
+                    carts: snap.val()
+                });
+            }
+            else {
+                this.setState({
+                    carts: []
+                })
+            }
         })
     }
 
@@ -89,15 +97,29 @@ export default class myCart extends Component {
         firebase.database().ref('user/' + uid + '/cart/' + key).update({
             amount: this.state.carts[key].amount - 1
         }).then((res) => {
-            let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            //make changes to ingredients
-            cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
-            this.setState({
-                carts: cartsCopy
-            })
+            // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+            // //make changes to ingredients
+            // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
+            // this.setState({
+            //     carts: cartsCopy
+            // })
             console.log("deduct")
         }).catch((error) => {
             console.log("error deducted", error)
+        })
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+            console.log(snap.val())
+            const data = snap.val()
+            if (data != null) {
+                this.setState({
+                    carts: snap.val()
+                });
+            }
+            else {
+                this.setState({
+                    carts: []
+                })
+            }
         })
     }
 
@@ -170,20 +192,17 @@ export default class myCart extends Component {
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
-
-
-                        <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deleteItems(
-                            key)}>
-                            <Text style={{ fontWeight: 'bold', color: 'white' }}> x </Text>
-                        </TouchableOpacity>
                         <View>
 
+                            <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
+                                key)}>
+                                <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>)
 
             })
-            //this.setState({ total: this.state.total + this.state.carts[key].price });
             return carts;
         }
     }
@@ -202,7 +221,14 @@ export default class myCart extends Component {
         else {
             return;
         }
-        // Note: this will *not* work as intended.
+    }
+
+    renderSubmitButton() {
+        if (this.state.carts.length > 0) {
+            return (<View><Button icon="credit-card" mode="contained" onPress={() => console.log('submit')}>
+                CONFIRM
+</Button></View>)
+        }
     }
 
     render() {
@@ -214,6 +240,7 @@ export default class myCart extends Component {
                     <View style={styles.bookpanel}>
                         {this.renderCarts()}
                         {this.CalTotal()}
+                        {this.renderSubmitButton()}
                     </View>
                 </View>
             </ScrollView>
@@ -235,12 +262,12 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     detail: {
-        marginLeft: 20,
+        flexDirection: 'row',
         marginRight: 15,
         marginBottom: 25
     },
     detailtext: {
-        width: 175
+        width: 180
     },
     bookcover: {
         width: 50,
@@ -261,7 +288,26 @@ const styles = StyleSheet.create({
         color: 'grey',
     },
     adddeductbutton: {
-        backgroundColor: '#7001FA', width: 25, height: 25, marginRight: 10, justifyContent: 'center', alignContent: 'center', alignItems: 'center', alignSelf: 'center', borderRadius: 4
+        backgroundColor: '#7001FA',
+        width: 25,
+        height: 25,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderRadius: 4
+    },
+    deletebutton: {
+        width: 25,
+        height: 25,
+        marginTop: -5,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: '',
+        alignSelf: 'flex-end',
+        borderRadius: 4
     },
     notfound: {
         marginTop: 30,
@@ -275,7 +321,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: 20,
         fontWeight: 'bold',
-        marginRight: 15
+        marginRight: 30
     }
 
 })
