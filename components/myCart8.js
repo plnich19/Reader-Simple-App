@@ -7,7 +7,7 @@ import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import Navigation from './Navigation.js';
 
-export default class myCart extends Component {
+export default class myCart8 extends Component {
     constructor(props) {
         super(props);
         if (!firebase.apps.length) {
@@ -46,11 +46,7 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            // var userinfo = firebase.auth().currentUser;
-            // if (userinfo != null) {
-            //     var uid = userinfo.uid;
-            //     console.log("User details", userinfo);
-            // this.setState({ uid: uid }, () => {
+
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const data = snap.val()
@@ -100,45 +96,32 @@ export default class myCart extends Component {
         })
     }
 
-
     deleteItems = async (key) => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        this.setState({ carts: [] });
-        firebase.database().ref('user/' + uid + '/cart/' + key).remove().then(function (data) {
+        await firebase.database().ref('user/' + uid + '/cart/' + key).remove().then(function (res) {
             console.log("delete")
         }).catch((error) => {
             console.log("error deducted", error)
         })
-        //this.redirect(uid)
-        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-            console.log(snap.val())
-            const data1 = snap.val()
-            if (data1 != null) {
-                this.setState({
-                    carts: snap.val()
-                });
-            }
-        });
+        this.redirect(uid)
     }
 
     redirect(uid) {
         const { navigate } = this.props.navigation;
         // alert('Welcome! ' + this.state.email)
-        navigate('myCart2', { uid: uid })
+        navigate('myCart9', { uid: uid })
     }
 
     renderCarts() {
-
-        console.log("caetttttttt", this.state.carts);
         let carts = [];
         if (this.state.carts.length == 0) {
-            return (<View style={{ justifyContent: 'center' }}>
+            (<View style={{ justifyContent: 'center' }}>
                 <Text style={styles.notfound}>Nothing in your carts right now</Text>
                 <View style={{ marginLeft: 30, marginRight: 30 }}>
                     <Button styles={{ marginLeft: 20 }} icon="shopping" mode="contained" onPress={() => this.props.navigation.navigate('Home')}>
                         Let's shop!
-  </Button>
+</Button>
                 </View></View>)
         }
         else {
@@ -173,7 +156,6 @@ export default class myCart extends Component {
                 </View>)
             })
             return carts;
-
         }
     }
 
@@ -233,13 +215,6 @@ const styles = StyleSheet.create({
     },
     adddeductbutton: {
         backgroundColor: '#7001FA', width: 25, height: 25, marginRight: 10, justifyContent: 'center', alignContent: 'center', alignItems: 'center', alignSelf: 'center', borderRadius: 4
-    },
-    notfound: {
-        marginTop: 30,
-        textAlign: 'center',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 30
     },
 
 })
