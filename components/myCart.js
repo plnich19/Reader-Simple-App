@@ -154,24 +154,75 @@ export default class myCart extends Component {
         //this.CalTotal()
     }
 
-    snack(action) {
-        this.setState({ snack: true });
-        console.log('snack');
-        if (action == 'confirm' && this.state.snack) {
-            console.log('snack2')
-            return (<View><Snackbar
-                style={{ backgroundColor: '#B20000' }}
-                visible={this.state.snack}
-                onDismiss={() => this.setState({ snack: false })}
-                action={{
-                    label: 'Yeah!',
-                    onPress: () => {
-                        this.setState({ snack: false })
-                    },
-                }}
-            >
-                Your payment is successful!
-            </Snackbar></View>)
+    snack() {
+        if (this.state.snack) {
+            if (this.state.message) {
+                let duration = 10000
+                return (<View><Snackbar
+                    duration={duration}
+                    style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+                    visible={this.state.snack}
+                    onDismiss={() => this.setState({ snack: false })}
+                    action={{
+                        label: 'Yeah!',
+                        onPress: () => {
+                            this.setState({ snack: false })
+                        },
+                    }}
+                >
+                    Your purchase is successful <Emoji name="two_hearts" />
+                </Snackbar>
+                </View>)
+            }
+            else {
+                return (<View>
+                    <Snackbar
+                        style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
+                        visible={this.state.snack}
+                        onDismiss={() => this.setState({ snack: false })}
+                        action={{
+                            label: 'Got it',
+                            onPress: () => {
+                                this.setState({ snack: false })
+                            },
+                        }}
+                    >
+                        Sorry! Can't make purchase.
+                    </Snackbar>
+                </View>)
+            }
+        }
+
+    }
+
+    checkSubmit() {
+        if (parseInt(this.state.amount) <= this.state.books.stock) {
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+                var uid = user.uid;
+            }
+            console.log("uid = ", uid)
+            firebase.database().ref('user/' + uid + '/cart/' + key).set({
+                amount: parseInt(this.state.amount),
+                nameth: nameth,
+                nameen: nameen,
+                author: author,
+                price: price,
+                cover: cover
+            }).then((res) => {
+                this.setState({ snack: true, message: true })
+                //this.snack('added')
+                console.log("added")
+            }).catch((error) => {
+                console.log("error added", error)
+            })
+
+        }
+        else {
+            // alert('YOUR PURCHASE EXCEED OUR STOCK')
+            this.setState({ snack: true, message: false })
+            //this.snack('404')
+
         }
     }
 
@@ -204,17 +255,18 @@ export default class myCart extends Component {
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
                         </TouchableOpacity>
-                        <TextInput style={{ width: 40, height: 40, marginRight: 10 }} value={this.state.carts[key].amount.toString()}></TextInput>
+                        {/* <TextInput style={{ width: 40, height: 40, marginRight: 5 }} value={this.state.carts[key].amount.toString()}></TextInput> */}
+                        <Text styles={{ marginRight: 10, fontSize: 15 }}>{this.state.carts[key].amount}</Text>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.addItems(
                             key)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
                         <View>
-
                             <TouchableOpacity style={styles.deletebutton} onPress={() => this.deleteItems(
                                 key)}>
                                 <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
                             </TouchableOpacity>
+
                         </View>
                     </View>
                 </View>)
@@ -268,6 +320,7 @@ export default class myCart extends Component {
 
 const styles = StyleSheet.create({
     hotbar: {
+        flex: 1,
         marginTop: 50,
     },
     choicename: {
@@ -285,7 +338,7 @@ const styles = StyleSheet.create({
         marginBottom: 25
     },
     detailtext: {
-        width: 180
+        width: 175
     },
     bookcover: {
         width: 50,
@@ -309,6 +362,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#7001FA',
         width: 25,
         height: 25,
+        marginLeft: 10,
         marginRight: 10,
         justifyContent: 'center',
         alignContent: 'center',
@@ -317,13 +371,13 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
     deletebutton: {
-        width: 25,
+        width: 10,
         height: 25,
         marginTop: -5,
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
-        alignSelf: 'flex-end',
+        alignSelf: 'flex-start',
         borderRadius: 4
     },
     notfound: {
