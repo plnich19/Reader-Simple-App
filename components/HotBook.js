@@ -37,19 +37,6 @@ export default class HotBook extends Component {
             })
             return books;
         }
-        // })
-
-        // data.map(item => {
-        //     books.push(<View key={item.id} style={styles.detail}>
-        //         <Image style={styles.bookcover} source={{ uri: item.cover }}></Image>
-        //         <View style={styles.detailtext}>
-        //             <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{item.nameth}</Text>
-        //             <Text style={styles.author}>{item.author}</Text>
-        //         </View>
-        //     </View>
-        //     )
-        // })
-        // return books;
     }
 
     render() {
@@ -63,14 +50,6 @@ export default class HotBook extends Component {
         )
     }
 }
-
-// const mapStateToProps = ({ data }) => {
-//     return {
-//         data
-//     }
-// }
-
-//export default connect(mapStateToProps, actions)(HotBook)
 
 const styles = StyleSheet.create({
     hotbar: {
