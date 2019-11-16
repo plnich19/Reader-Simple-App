@@ -173,6 +173,23 @@ export default class myCart extends Component {
         //this.CalTotal()
     }
 
+    deleteCarts = async () => {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        //this.setState({ carts: [] });
+        firebase.database().ref('user/' + uid + '/cart/').remove().then(function (data) {
+            console.log("delete cart")
+        }).catch((error) => {
+            console.log("error deducted", error)
+        })
+
+        //this.CalTotal()
+        this.setState({
+            carts: [],
+            submit: false
+        });
+    }
+
     snack() {
         if (this.state.snack) {
             if (this.state.message) {
@@ -268,7 +285,7 @@ export default class myCart extends Component {
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
-                        <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].price} Baht</Text>
+                        <Text style={styles.price} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].price} Baht</Text>
 
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
@@ -377,7 +394,14 @@ export default class myCart extends Component {
             total = total + (carts[key].price * carts[key].amount);
         })
         if (total > 0) {
-            return <Text style={styles.total}>Total: {total}</Text>;
+            return (<View style={{ flexWrap: 'wrap', flex: 'column' }}>
+                <View style={{ marginLeft: 10, width: '40%' }}>
+                    <Button color="#7BA7B2" icon="cart-off" mode="outlined" onPress={() => this.deleteCarts()}>
+                        Empty Cart</Button>
+                </View>
+                <View><Text style={styles.total}>Total: {total}</Text>
+                </View>
+            </View>);
         }
         else {
             return;
@@ -386,7 +410,7 @@ export default class myCart extends Component {
 
     renderSubmitButton() {
         if (this.state.submit) {
-            return (<View styles={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
+            return (<View style={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
                 <Button icon="credit-card" mode="contained" onPress={() => this.purchaseAllow()}>
                     CONFIRM
                 </Button></View>)

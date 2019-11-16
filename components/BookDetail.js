@@ -75,7 +75,11 @@ export default class BookDetail extends Component {
             return (<View style={{ marginTop: 20, marginLeft: 10 }}><Text style={{ fontSize: 15, fontWeight: 'bold' }}>Please log in first to purchase books</Text></View>)
         }
     }
-
+    redirect() {
+        const { navigate } = this.props.navigation;
+        // alert('Welcome! ' + this.state.email)
+        navigate('myCart')
+    }
     snack() {
         if (this.state.snack) {
             if (this.state.message) {
@@ -86,9 +90,10 @@ export default class BookDetail extends Component {
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'Yeah!',
+                        label: 'Yeah',
                         onPress: () => {
                             this.setState({ snack: false })
+
                         },
                     }}
                 >

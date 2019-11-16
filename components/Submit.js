@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { withNavigation } from 'react-navigation';
+import { TextInput, Button, Snackbar } from 'react-native-paper'
+import Emoji from 'react-native-emoji';
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import { ScrollView } from "react-native-gesture-handler";
@@ -25,10 +27,12 @@ export default class Submit extends Component {
         const { params } = this.props.navigation.state;
         const status = params ? params.status : null;
         if (status) {
-            return (<Text styles={styles.notfound}>Thank you for Your Purchase!</Text>)
+            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="tada" style={{ fontSize: 50, justifyContent: 'center' }} />
+                <Text style={styles.notfound}>Thank you for Your Purchase!</Text></View>)
         }
         else {
-            return (<Text styles={styles.notfound}>Sorry. Purchase can't not be done {this.state.status}</Text>)
+            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="disappointed_relieved" style={{ fontSize: 50 }} />
+                <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done {this.state.status}</Text></View>)
         }
     }
     render() {
@@ -43,15 +47,31 @@ export default class Submit extends Component {
                     <View style={styles.bookpanel}>
                         {this.renderText()}
                     </View>
-                    <Button onPress={() => this.props.navigation.goBack()}><Text>Back</Text></Button>
+
+                    <View style={{ marginLeft: 25, marginRight: 25, marginTop: 25, alignItems: 'center' }} >
+                        <Button icon="arrow-left-box" mode="contained" onPress={() => this.props.navigation.goBack()}>
+                            BACK
+                </Button></View>
+                    {/* <View>
+
+                    <Text style={}></Text>
+                    </View> */}
+                    <View style={{ marginLeft: 25, marginRight: 25, marginTop: 25, alignItems: 'center' }} >
+                        <Button icon="home" mode="contained" onPress={() => this.props.navigation.navigate('Home'
+                        )}>
+                            HOME
+                </Button></View>
+                    {/* <Button onPress={() => this.props.navigation.goBack()}><Text>Back</Text></Button> */}
+
                 </View>
-            </ScrollView>
+            </ScrollView >
         )
     }
 }
 
 const styles = StyleSheet.create({
     hotbar: {
+        flex: 1,
         marginTop: 50,
     },
     choicename: {
@@ -61,8 +81,8 @@ const styles = StyleSheet.create({
         marginBottom: 30
     },
     bookpanel: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: 'column',
+        flexWrap: 'wrap'
     },
     detail: {
         marginLeft: 20,
@@ -93,7 +113,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: 30,
         marginBottom: 30
     },
 });
