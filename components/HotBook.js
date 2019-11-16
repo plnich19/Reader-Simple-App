@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import * as firebase from 'firebase';
 import _ from 'lodash';
-import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+import config from '../firebase/config.js';
 
 export default class HotBook extends Component {
     constructor(props) {
