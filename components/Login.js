@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { TextInput, HelperText, Button, Snackbar } from "react-native-paper";
 import { withNavigation } from 'react-navigation';
-import Navigation from './Navigation.js';
 import * as firebase from 'firebase';
-import auth from '../firebase';
-import Menu from "./Menu.js";
+
+import Navigation from './Navigation.js';
 
 class Login extends Component {
     constructor(props) {
@@ -53,14 +52,15 @@ class Login extends Component {
                 console.log("Created user successfully");
                 this.setState({ snack: true });
                 this.snack(this.state.email, 'OK')
-                //this.redirect();
             })
             .catch(error => {
+                this.setState({ snack: true });
                 this.snack('', '404')
-                alert("An error occured: " + error.message);
+                // alert("An error occured: " + error.message);
                 console.log("An error occured", error.message);
             });
     }
+
     snack(user, message) {
         if (this.state.snack && message !== '404') {
             return (<Snackbar
@@ -106,22 +106,21 @@ class Login extends Component {
                 this.snack(this.state.email)
             })
             .catch(error => {
+                this.setState({ snack: true });
                 this.snack('', '404')
-                alert("An error occured: " + error.message);
+                // alert("An error occured: " + error.message);
                 console.log("An error occured", error.message);
             });
     }
 
     redirect() {
         const { navigate } = this.props.navigation;
-        // alert('Welcome! ' + this.state.email)
         navigate('Home')
     }
     forceUpdateHandler() {
         this.forceUpdate();
     };
 
-    // for lab: add logout function
     logout() {
         firebase
             .auth()
@@ -198,8 +197,7 @@ class Login extends Component {
                     </View>
 
                 </ScrollView>);
-        }
-        else if (!this.state.isShowLogin) {
+        } else if (!this.state.isShowLogin) {
             authUI = (
                 <ScrollView style={styles.loginpanel}>
 
@@ -244,30 +242,20 @@ class Login extends Component {
                             Register</Button>
                         <Button style={styles.loginbutton} icon="login" mode="contained" onPress={() => this.setState({ isShowLogin: true })}>
                             Already have an account?</Button>
-
-
-
                     </View>
-
                 </ScrollView>);
-        }
-        else if (this.state.login) {
+        } else if (this.state.login) {
             authUI = (
                 <ScrollView style={styles.loginpanel}>
-
                     <Navigation />
                     <TouchableOpacity style={styles.loginbutton} onPress={this.logout}>
                         <Text style={styles.loginbuttontext}>Logout</Text>
                     </TouchableOpacity>
                 </ScrollView>)
-        }
-        return (
-
+        } return (
             <ScrollView style={styles.loginpanel}>
-
                 <View style={styles.loginpanel}>{authUI}</View>
                 {this.snack()}
-
             </ScrollView>
         )
     }
@@ -295,10 +283,6 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 10,
-        // borderColor: 'black',
-        // borderRadius: 4,        justifyContent: 'center'
-
-        // borderWidth: 0.5,
         marginLeft: 40,
         marginRight: 40,
         height: 50,
@@ -309,7 +293,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 40,
         marginRight: 40,
-        // backgroundColor: 'black',
         height: 40,
         justifyContent: 'center'
     },
@@ -322,4 +305,5 @@ const styles = StyleSheet.create({
         width: '100%'
     }
 });
+
 export default withNavigation(Login);
