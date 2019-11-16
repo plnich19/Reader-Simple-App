@@ -20,10 +20,13 @@ export default class myCart extends Component {
             name: '',
             uid: '',
             total: 0,
-            snack: true,
+            snack: false,
             submit: false,
-            allow: true,
+            allow: [],
+            message: false,
+            status: ''
         }
+        this.snack = this.snack.bind(this);
     }
 
     listenForAuthChange() {
@@ -46,6 +49,7 @@ export default class myCart extends Component {
 
     componentDidMount() {
         this.listenForAuthChange();
+        //this.ifAllow()
     }
 
     componentWillMount() {
@@ -68,6 +72,7 @@ export default class myCart extends Component {
                 }
             });
             // })
+            //this.ifAllow()
         }
     }
 
@@ -89,11 +94,13 @@ export default class myCart extends Component {
                     carts: snap.val(),
                     submit: true
                 });
+                //this.ifAllow();
             }
             else {
                 this.setState({
                     carts: [],
-                    submit: false
+                    submit: false,
+                    //allow: true
                 })
             }
         })
@@ -123,11 +130,13 @@ export default class myCart extends Component {
                     carts: snap.val(),
                     submit: true
                 });
+                //this.ifAllow();
             }
             else {
                 this.setState({
                     carts: [],
-                    submit: false
+                    submit: false,
+                    //allow: true
                 })
             }
         })
@@ -151,6 +160,7 @@ export default class myCart extends Component {
                 this.setState({
                     carts: snap.val()
                 });
+                //this.ifAllow();
             }
             else {
                 this.setState({
@@ -163,12 +173,27 @@ export default class myCart extends Component {
         //this.CalTotal()
     }
 
+    deleteCarts = async () => {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        //this.setState({ carts: [] });
+        firebase.database().ref('user/' + uid + '/cart/').remove().then(function (data) {
+            console.log("delete cart")
+        }).catch((error) => {
+            console.log("error deducted", error)
+        })
+
+        //this.CalTotal()
+        this.setState({
+            carts: [],
+            submit: false
+        });
+    }
+
     snack() {
         if (this.state.snack) {
             if (this.state.message) {
-                let duration = 10000
                 return (<View><Snackbar
-                    duration={duration}
                     style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
@@ -260,6 +285,7 @@ export default class myCart extends Component {
                     <View style={styles.detailtext}>
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
+                        <Text style={styles.price} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].price} Baht</Text>
 
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
@@ -294,6 +320,71 @@ export default class myCart extends Component {
         }
     }
 
+    redirect(status) {
+        const { navigate } = this.props.navigation;
+        // alert('Welcome! ' + this.state.email)
+        if (status == 'notallow') {
+            navigate('Submit', { status: false })
+        }
+        if (status == 'allow') {
+            navigate('Submit', { status: true })
+        }
+    }
+
+    purchaseAllow = async () => {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        if (uid != null) {
+            await firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                console.log(snap.val())
+                const cartsdata = snap.val()
+                Object.keys(cartsdata).map(async (key, index) => {
+                    const booksamount = cartsdata[key].amount
+                    const allow2 = await firebase.database().ref('books/' + key).once('value', (snap2) => {
+                        var res;
+                        const booksdata = snap2.val()
+                        const booksstock = booksdata.stock
+                        console.log("booksamount", booksamount)
+                        console.log("boksstock", booksstock)
+                        if (booksamount > booksstock) {
+                            this.redirect('notallow')
+                            // res = 'false'
+                            // allow.push(res)
+                            // //this.setState({ allow: false })
+                            // console.log("allow false inner", allow)
+                        }
+
+                        // console.log("akkiwad", allow)
+                        // this.setState({ allow: allow })
+                        // return allow;
+
+                    })
+                    //console.log("state", this.state.allow)
+                })
+            });
+            this.redirect('allow')
+        }
+    }
+
+    ifAllow = async () => {
+        this.purchaseAllow().then(() => {
+            if (this.state.allow.length > 0) {
+                if (this.state.allow.includes('false')) {
+                    this.setState({ status: 'notallow' })
+
+                    console.log("stuck")
+                    // this.redirect(status)
+
+                }
+                else if (!this.state.allow.includes('false')) {
+                    this.setState({ status: 'allow' })
+                    console.log("ok", this.state.allow)
+                }
+                console.log("this2", this.state.status)
+            }
+        })
+    }
+
     // Total
 
     CalTotal() {
@@ -303,7 +394,14 @@ export default class myCart extends Component {
             total = total + (carts[key].price * carts[key].amount);
         })
         if (total > 0) {
-            return <Text style={styles.total}>Total: {total}</Text>;
+            return (<View style={{ flexWrap: 'wrap', flex: 'column' }}>
+                <View style={{ marginLeft: 10, width: '40%' }}>
+                    <Button color="#7BA7B2" icon="cart-off" mode="outlined" onPress={() => this.deleteCarts()}>
+                        Empty Cart</Button>
+                </View>
+                <View><Text style={styles.total}>Total: {total}</Text>
+                </View>
+            </View>);
         }
         else {
             return;
@@ -312,8 +410,8 @@ export default class myCart extends Component {
 
     renderSubmitButton() {
         if (this.state.submit) {
-            return (<View styles={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
-                <Button icon="credit-card" mode="contained" onPress={() => this.snack('confirm')}>
+            return (<View style={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
+                <Button icon="credit-card" mode="contained" onPress={() => this.purchaseAllow()}>
                     CONFIRM
                 </Button></View>)
         }
@@ -375,6 +473,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: 'grey',
+    },
+    price: {
+        fontSize: 14,
+        color: '#009DFF',
     },
     adddeductbutton: {
         backgroundColor: '#7001FA',
