@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     author: {
-        color: 'red',
+        color: '#009DFF',
         fontSize: 20,
         marginLeft: 15,
         marginRight: 15,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     },
     price: {
         fontSize: 29,
-        color: 'red',
+        color: '#009DFF',
         marginTop: 20,
         marginRight: 10,
         marginLeft: 10
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     amountbutton: {
         marginTop: 30,
         marginLeft: 10,
-        backgroundColor: '#922B21',
+        // backgroundColor: '#922B21',
         height: 40,
         justifyContent: 'center',
     },
