@@ -104,7 +104,7 @@ export default class myCart extends Component {
     deleteItems = async (key) => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        this.setState({ carts: [] });
+        //this.setState({ carts: [] });
         firebase.database().ref('user/' + uid + '/cart/' + key).remove().then(function (data) {
             console.log("delete")
         }).catch((error) => {
