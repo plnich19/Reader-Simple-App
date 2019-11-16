@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Searchbar, Snackbar } from 'react-native-paper';
 import * as firebase from 'firebase';
+
 import API from '../API.js';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default class Menu extends Component {
     constructor(props) {
@@ -17,6 +17,7 @@ export default class Menu extends Component {
         this.logout = this.logout.bind(this);
         this.listenForAuthChange = this.listenForAuthChange.bind(this);
     }
+
     listenForAuthChange() {
         firebase.auth().onAuthStateChanged(user => {
             console.log("auth changed");
@@ -39,6 +40,7 @@ export default class Menu extends Component {
             }
         });
     }
+
     componentDidMount() {
         this.listenForAuthChange();
     }
@@ -61,7 +63,7 @@ export default class Menu extends Component {
     snack() {
         if (this.state.snack) {
             return (<Snackbar
-                style={{ backgroundColor: '#B20000' }}
+                style={{ backgroundColor: '#00B461' }}
                 visible={this.state.snack}
                 onDismiss={() => this.setState({ snack: false })}
                 action={{
@@ -76,17 +78,14 @@ export default class Menu extends Component {
         }
     }
 
-    // for lab: add logout function
     logout() {
         firebase
             .auth()
             .signOut()
             .then(() => {
                 console.log("Logout successfully");
-                // alert("Logout Successfully");
                 this.setState({ login: false })
                 this.setState({ snack: true });
-                this.snack()
             })
             .catch(error => {
                 alert("An error occured: " + error.message);
@@ -95,7 +94,6 @@ export default class Menu extends Component {
     }
 
     redirect(isbn) {
-        // console.log("bookhe", isbn);
         const { navigate } = this.props.navigation;
         navigate('Find', {
             isbn: isbn,
@@ -137,12 +135,9 @@ export default class Menu extends Component {
             this.setState({ ifSearch: false })
         }
         return (
-
             <View style={styles.menupanel}>
-
                 <Searchbar
                     keyboardType='default'
-                    // containerStyle={{ backgroundColor: 'black' }}
                     placeholder="Search Here..."
                     onChangeText={this.updateSearch}
                     value={search}
@@ -152,6 +147,7 @@ export default class Menu extends Component {
                     <Text style={styles.loginbuttontext}>Search</Text>
                 </TouchableOpacity>
                 {this.SignInToggle()}
+                {this.snack()}
             </View>);
 
     }
