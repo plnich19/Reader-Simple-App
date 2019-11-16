@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import { Button, Snackbar } from 'react-native-paper'
 import * as firebase from 'firebase';
-import { TextInput, Button, Snackbar } from 'react-native-paper'
 import _ from 'lodash';
+
 import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import Navigation from './Navigation.js';
@@ -49,18 +50,12 @@ export default class myCart extends Component {
 
     componentDidMount() {
         this.listenForAuthChange();
-        //this.ifAllow()
     }
 
     componentWillMount() {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            // var userinfo = firebase.auth().currentUser;
-            // if (userinfo != null) {
-            //     var uid = userinfo.uid;
-            //     console.log("User details", userinfo);
-            // this.setState({ uid: uid }, () => {
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const data = snap.val()
@@ -71,8 +66,6 @@ export default class myCart extends Component {
                     });
                 }
             });
-            // })
-            //this.ifAllow()
         }
     }
 
@@ -94,13 +87,11 @@ export default class myCart extends Component {
                     carts: snap.val(),
                     submit: true
                 });
-                //this.ifAllow();
             }
             else {
                 this.setState({
                     carts: [],
                     submit: false,
-                    //allow: true
                 })
             }
         })
@@ -112,12 +103,6 @@ export default class myCart extends Component {
         firebase.database().ref('user/' + uid + '/cart/' + key).update({
             amount: this.state.carts[key].amount - 1
         }).then((res) => {
-            // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            // //make changes to ingredients
-            // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
-            // this.setState({
-            //     carts: cartsCopy
-            // })
             console.log("deduct")
         }).catch((error) => {
             console.log("error deducted", error)
@@ -130,29 +115,24 @@ export default class myCart extends Component {
                     carts: snap.val(),
                     submit: true
                 });
-                //this.ifAllow();
             }
             else {
                 this.setState({
                     carts: [],
                     submit: false,
-                    //allow: true
                 })
             }
         })
     }
 
-
     deleteItems = async (key) => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        //this.setState({ carts: [] });
         firebase.database().ref('user/' + uid + '/cart/' + key).remove().then(function (data) {
             console.log("delete")
         }).catch((error) => {
             console.log("error deducted", error)
         })
-        //this.redirect(uid)
         firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
             const data = snap.val()
@@ -160,7 +140,6 @@ export default class myCart extends Component {
                 this.setState({
                     carts: snap.val()
                 });
-                //this.ifAllow();
             }
             else {
                 this.setState({
@@ -170,20 +149,16 @@ export default class myCart extends Component {
             }
         }
         );
-        //this.CalTotal()
     }
 
     deleteCarts = async () => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        //this.setState({ carts: [] });
         firebase.database().ref('user/' + uid + '/cart/').remove().then(function (data) {
             console.log("delete cart")
         }).catch((error) => {
             console.log("error deducted", error)
         })
-
-        //this.CalTotal()
         this.setState({
             carts: [],
             submit: false
@@ -245,24 +220,18 @@ export default class myCart extends Component {
                 cover: cover
             }).then((res) => {
                 this.setState({ snack: true, message: true })
-                //this.snack('added')
                 console.log("added")
             }).catch((error) => {
                 console.log("error added", error)
             })
-
         }
         else {
-            // alert('YOUR PURCHASE EXCEED OUR STOCK')
             this.setState({ snack: true, message: false })
-            //this.snack('404')
-
         }
     }
 
 
     renderCarts() {
-
         console.log("caetttttttt", this.state.carts);
         let carts = [];
         if (this.state.carts.length == 0) {
@@ -322,7 +291,6 @@ export default class myCart extends Component {
 
     redirect(status) {
         const { navigate } = this.props.navigation;
-        // alert('Welcome! ' + this.state.email)
         if (status == 'notallow') {
             navigate('Submit', { status: false })
         }
@@ -341,25 +309,14 @@ export default class myCart extends Component {
                 Object.keys(cartsdata).map(async (key, index) => {
                     const booksamount = cartsdata[key].amount
                     const allow2 = await firebase.database().ref('books/' + key).once('value', (snap2) => {
-                        var res;
                         const booksdata = snap2.val()
                         const booksstock = booksdata.stock
                         console.log("booksamount", booksamount)
                         console.log("boksstock", booksstock)
                         if (booksamount > booksstock) {
                             this.redirect('notallow')
-                            // res = 'false'
-                            // allow.push(res)
-                            // //this.setState({ allow: false })
-                            // console.log("allow false inner", allow)
                         }
-
-                        // console.log("akkiwad", allow)
-                        // this.setState({ allow: allow })
-                        // return allow;
-
                     })
-                    //console.log("state", this.state.allow)
                 })
             });
             this.redirect('allow')
@@ -371,22 +328,16 @@ export default class myCart extends Component {
             if (this.state.allow.length > 0) {
                 if (this.state.allow.includes('false')) {
                     this.setState({ status: 'notallow' })
-
                     console.log("stuck")
-                    // this.redirect(status)
-
                 }
                 else if (!this.state.allow.includes('false')) {
                     this.setState({ status: 'allow' })
-                    console.log("ok", this.state.allow)
                 }
-                console.log("this2", this.state.status)
             }
         })
     }
 
     // Total
-
     CalTotal() {
         let total = 0;
         let carts = this.state.carts;
