@@ -35,6 +35,7 @@ export default class Submit extends Component {
                 <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done {this.state.status}</Text></View>)
         }
     }
+
     render() {
         const { params } = this.props.navigation.state;
         const status = params ? params.status : null;
