@@ -90,7 +90,7 @@ export default class BookDetail extends Component {
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'See here',
+                        label: 'Yeah!',
                         onPress: () => {
                             this.setState({ snack: false })
                             // this.props.navigation.navigate("myCart")
@@ -115,7 +115,7 @@ export default class BookDetail extends Component {
                             },
                         }}
                     >
-                        Your purchase exceed our stock
+                        Your purchase doesn't meet an valid condition or number exceed our stock
                     </Snackbar>
                 </View>)
             }
@@ -125,7 +125,7 @@ export default class BookDetail extends Component {
 
 
     addtoCart(key, nameth, nameen, author, price, cover) {
-        if (parseInt(this.state.amount) <= this.state.books.stock) {
+        if ((parseInt(this.state.amount) <= this.state.books.stock) && (parseInt(this.state.amount) > 0)) {
             var user = firebase.auth().currentUser;
             if (user != null) {
                 var uid = user.uid;
