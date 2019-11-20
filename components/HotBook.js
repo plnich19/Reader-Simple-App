@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import * as firebase from 'firebase';
 import _ from 'lodash';
 import config from '../firebase/config.js';
@@ -14,13 +14,11 @@ export default class HotBook extends Component {
         }
         this.state = {
             books: [],
-            loading: false
         }
     }
     componentWillMount() {
-        this.setState({ loading: true })
         firebase.database().ref('books/').once('value', (snap) => {
-            this.setState({ books: snap.val(), loading: false })
+            this.setState({ books: snap.val() })
         })
     }
     renderBooks() {
@@ -54,20 +52,10 @@ export default class HotBook extends Component {
         // return books;
     }
 
-    renderLoading() {
-        if (this.state.loading) {
-            return (
-                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center', alignSelf: 'center' }}><ActivityIndicator size="large" color="#0000ff" />
-                    <Text style={{ fontSize: 20, marginTop: 30 }}>We are getting our books...</Text></View>);
-        }
-
-    }
-
     render() {
         return (
             <View style={styles.hotbar}>
                 <Text style={styles.choicename}>Let's Explore <Emoji name="star2" style={{ fontSize: 20 }} /></Text>
-                {this.renderLoading()}
                 <View style={styles.bookpanel}>
                     {this.renderBooks()}
                 </View>
