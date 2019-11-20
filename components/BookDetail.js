@@ -90,9 +90,10 @@ export default class BookDetail extends Component {
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'Yeah',
+                        label: 'See here',
                         onPress: () => {
                             this.setState({ snack: false })
+                            // this.props.navigation.navigate("myCart")
 
                         },
                     }}

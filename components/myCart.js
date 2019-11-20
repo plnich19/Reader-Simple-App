@@ -47,8 +47,29 @@ export default class myCart extends Component {
         )
     }
 
+    listenForCartChange() {
+        const { params } = this.props.navigation.state;
+        const uid = params ? params.uid : null;
+        firebase.database().ref('books/' + uid + '/cart/').on('value', (snap) => {
+            const data = snap.val()
+            if (data != null) {
+                this.setState({
+                    carts: data,
+                    submit: true
+                })
+            }
+            // else if (data == null) {
+            //     this.setState({
+            //         carts: [],
+            //         submit: false
+            //     })
+            // }
+        })
+    }
+
     componentDidMount() {
         this.listenForAuthChange();
+        this.listenForCartChange();
         //this.ifAllow()
     }
 
@@ -106,40 +127,46 @@ export default class myCart extends Component {
         })
     }
 
-    deductItems(key) {
+    deductItems(key, amountnow) {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        firebase.database().ref('user/' + uid + '/cart/' + key).update({
-            amount: this.state.carts[key].amount - 1
-        }).then((res) => {
-            // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            // //make changes to ingredients
-            // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
-            // this.setState({
-            //     carts: cartsCopy
-            // })
-            console.log("deduct")
-        }).catch((error) => {
-            console.log("error deducted", error)
-        })
-        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-            console.log(snap.val())
-            const data = snap.val()
-            if (data != null) {
-                this.setState({
-                    carts: snap.val(),
-                    submit: true
-                });
-                //this.ifAllow();
-            }
-            else {
-                this.setState({
-                    carts: [],
-                    submit: false,
-                    //allow: true
-                })
-            }
-        })
+        if (amountnow == 1) {
+            console.log("notupdate")
+        }
+        else {
+            firebase.database().ref('user/' + uid + '/cart/' + key).update({
+                amount: this.state.carts[key].amount - 1
+            }).then((res) => {
+                // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+                // //make changes to ingredients
+                // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
+                // this.setState({
+                //     carts: cartsCopy
+                // })
+                console.log("deduct")
+            }).catch((error) => {
+                console.log("error deducted", error)
+            })
+            firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                console.log(snap.val())
+                const data = snap.val()
+                if (data != null) {
+                    this.setState({
+                        carts: snap.val(),
+                        submit: true
+                    });
+                    //this.ifAllow();
+                }
+                else {
+                    this.setState({
+                        carts: [],
+                        submit: false,
+                        //allow: true
+                    })
+                }
+            })
+        }
+
     }
 
 
@@ -296,7 +323,7 @@ export default class myCart extends Component {
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deductItems(
-                            key)}>
+                            key, this.state.carts[key].amount)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
                         </TouchableOpacity>
                         {/* <TextInput style={{ width: 40, height: 40, marginRight: 5 }} value={this.state.carts[key].amount.toString()}></TextInput> */}
