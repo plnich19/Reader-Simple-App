@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { Searchbar, Snackbar } from 'react-native-paper';
+import { Snackbar } from 'react-native-paper';
+import { SearchBar } from 'react-native-elements';
 import * as firebase from 'firebase';
 import API from '../API.js';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -94,11 +95,12 @@ export default class Menu extends Component {
             });
     }
 
-    redirect(isbn) {
+    redirect(isbn, search) {
         // console.log("bookhe", isbn);
         const { navigate } = this.props.navigation;
         navigate('Find', {
             isbn: isbn,
+            search: search
         })
     }
 
@@ -125,7 +127,7 @@ export default class Menu extends Component {
         if (this.state.search !== '') {
             await API('findBook', this.state.search).then((data) => {
                 this.setState({ books: data, ifSearch: true })
-                this.redirect(data);
+                this.redirect(data, this.state.search);
                 console.log("ชื่อนี่", data)
             })
         }
@@ -140,13 +142,18 @@ export default class Menu extends Component {
 
             <View style={styles.menupanel}>
 
-                <Searchbar
+                <SearchBar
                     keyboardType='default'
-                    // containerStyle={{ backgroundColor: 'black' }}
+                    containerStyle={{ backgroundColor: 'white' }}
+                    inputContainerStyle={{ backgroundColor: '#E7EEEF' }}
+                    inputStyle={{ color: '#1771FF' }}
+                    icon={{ color: '#1771FF' }}
+                    clearIcon={{ color: '#1771FF' }}
                     placeholder="Search Here..."
                     onChangeText={this.updateSearch}
                     value={search}
-                    iconColor='#6d6ddb'
+                    lightTheme={true}
+                    round={true}
                 />
                 <TouchableOpacity style={styles.loginbutton} onPress={() => this.findBook()}>
                     <Text style={styles.loginbuttontext}>Search</Text>
