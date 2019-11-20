@@ -61,7 +61,7 @@ export default class BookDetail extends Component {
         const { params } = this.props.navigation.state;
         const key = params ? params.key : null;
         if (this.state.login) {
-            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='number-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount.toString()} />
+            return (<View style={{ flexDirection: 'row', marginBottom: 40, }}><TextInput keyboardType='phone-pad' style={styles.amount} onChangeText={this.updateAmount} value={this.state.amount.toString()} />
                 <Button style={styles.amountbutton} icon="cart" mode="contained" onPress={() => this.addtoCart(
                     key, this.state.books.nameth,
                     this.state.books.nameen,

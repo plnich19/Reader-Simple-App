@@ -47,30 +47,8 @@ export default class myCart extends Component {
         )
     }
 
-    listenForCartChange() {
-        const { params } = this.props.navigation.state;
-        const uid = params ? params.uid : null;
-        firebase.database().ref('books/' + uid + '/cart/').on('value', (snap) => {
-            const data = snap.val()
-            if (data != null) {
-                this.setState({
-                    carts: data,
-                    submit: true
-                })
-            }
-            // else if (data == null) {
-            //     this.setState({
-            //         carts: [],
-            //         submit: false
-            //     })
-            // }
-        })
-    }
-
     componentDidMount() {
-        console.log("comdid")
         this.listenForAuthChange();
-        this.listenForCartChange();
         //this.ifAllow()
     }
 
@@ -83,7 +61,7 @@ export default class myCart extends Component {
             //     var uid = userinfo.uid;
             //     console.log("User details", userinfo);
             // this.setState({ uid: uid }, () => {
-            firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+            firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const data = snap.val()
                 if (data != null) {
@@ -108,7 +86,7 @@ export default class myCart extends Component {
         }).catch((error) => {
             console.log("error added", error)
         })
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
             const data = snap.val()
             if (data != null) {
@@ -144,7 +122,7 @@ export default class myCart extends Component {
         }).catch((error) => {
             console.log("error deducted", error)
         })
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
             const data = snap.val()
             if (data != null) {
@@ -175,7 +153,7 @@ export default class myCart extends Component {
             console.log("error deducted", error)
         })
         //this.redirect(uid)
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
             const data = snap.val()
             if (data != null) {
@@ -357,12 +335,12 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            await firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+            await firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const cartsdata = snap.val()
                 Object.keys(cartsdata).map(async (key, index) => {
                     const booksamount = cartsdata[key].amount
-                    const allow2 = await firebase.database().ref('books/' + key).on('value', (snap2) => {
+                    const allow2 = await firebase.database().ref('books/' + key).once('value', (snap2) => {
                         var res;
                         const booksdata = snap2.val()
                         const booksstock = booksdata.stock
