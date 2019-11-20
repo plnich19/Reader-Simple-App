@@ -347,14 +347,14 @@ export default class myCart extends Component {
         }
     }
 
-    redirect(status) {
+    redirect(status, index, length) {
         const { navigate } = this.props.navigation;
         // alert('Welcome! ' + this.state.email)
         if (status == 'notallow') {
-            navigate('Submit', { status: false })
+            navigate('Submit', { status: false, index: index, length: length })
         }
         if (status == 'allow') {
-            navigate('Submit', { status: true })
+            navigate('Submit', { status: true, index: index, length: length })
         }
     }
 
@@ -373,12 +373,16 @@ export default class myCart extends Component {
                         const booksstock = booksdata.stock
                         console.log("booksamount", booksamount)
                         console.log("boksstock", booksstock)
+                        console.log("amountleb", Object.keys(cartsdata).length)
                         if (booksamount > booksstock) {
-                            this.redirect('notallow')
+                            this.redirect('notallow', index, Object.keys(cartsdata).length)
                             // res = 'false'
                             // allow.push(res)
                             // //this.setState({ allow: false })
                             // console.log("allow false inner", allow)
+                        }
+                        else {
+                            this.redirect('allow', index, Object.keys(cartsdata).length)
                         }
 
                         // console.log("akkiwad", allow)
@@ -389,7 +393,6 @@ export default class myCart extends Component {
                     //console.log("state", this.state.allow)
                 })
             });
-            this.redirect('allow')
         }
     }
 
