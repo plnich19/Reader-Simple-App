@@ -40,7 +40,7 @@ export default class Submit extends Component {
             }
             else {
                 return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="disappointed_relieved" style={{ fontSize: 50 }} />
-                    <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done {this.state.status}</Text></View>)
+                    <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done Plaase check your cart again</Text></View>)
             }
         }
     }
