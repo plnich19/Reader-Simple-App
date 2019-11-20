@@ -68,7 +68,6 @@ export default class myCart extends Component {
     }
 
     componentDidMount() {
-        console.log("comdid")
         this.listenForAuthChange();
         this.listenForCartChange();
         //this.ifAllow()
@@ -83,7 +82,7 @@ export default class myCart extends Component {
             //     var uid = userinfo.uid;
             //     console.log("User details", userinfo);
             // this.setState({ uid: uid }, () => {
-            firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+            firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const data = snap.val()
                 if (data != null) {
@@ -98,70 +97,85 @@ export default class myCart extends Component {
         }
     }
 
-    addItems(key) {
+    addItems(key, amountnow) {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        firebase.database().ref('user/' + uid + '/cart/' + key).update({
-            amount: this.state.carts[key].amount + 1
-        }).then((res) => {
-            console.log("added")
-        }).catch((error) => {
-            console.log("error added", error)
-        })
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
-            console.log(snap.val())
-            const data = snap.val()
-            if (data != null) {
-                this.setState({
-                    carts: snap.val(),
-                    submit: true
-                });
-                //this.ifAllow();
+        firebase.database().ref('books/' + key).once('value', (snap2) => {
+            const stock = snap2.val().stock;
+            if (amountnow < parseInt(stock)) {
+                firebase.database().ref('user/' + uid + '/cart/' + key).update({
+                    amount: this.state.carts[key].amount + 1
+                }).then((res) => {
+                    console.log("added")
+                }).catch((error) => {
+                    console.log("error added", error)
+                })
+                firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                    console.log(snap.val())
+                    const data = snap.val()
+                    if (data != null) {
+                        this.setState({
+                            carts: snap.val(),
+                            submit: true
+                        });
+                        //this.ifAllow();
+                    }
+                    else {
+                        this.setState({
+                            carts: [],
+                            submit: false,
+                            //allow: true
+                        })
+                    }
+                })
             }
             else {
-                this.setState({
-                    carts: [],
-                    submit: false,
-                    //allow: true
-                })
+                console.log("notupdate")
+                this.setState({ snack: true })
             }
         })
     }
 
-    deductItems(key) {
+    deductItems(key, amountnow) {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        firebase.database().ref('user/' + uid + '/cart/' + key).update({
-            amount: this.state.carts[key].amount - 1
-        }).then((res) => {
-            // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
-            // //make changes to ingredients
-            // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
-            // this.setState({
-            //     carts: cartsCopy
-            // })
-            console.log("deduct")
-        }).catch((error) => {
-            console.log("error deducted", error)
-        })
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
-            console.log(snap.val())
-            const data = snap.val()
-            if (data != null) {
-                this.setState({
-                    carts: snap.val(),
-                    submit: true
-                });
-                //this.ifAllow();
-            }
-            else {
-                this.setState({
-                    carts: [],
-                    submit: false,
-                    //allow: true
-                })
-            }
-        })
+        if (amountnow == 1) {
+            console.log("notupdate")
+        }
+        else {
+            firebase.database().ref('user/' + uid + '/cart/' + key).update({
+                amount: this.state.carts[key].amount - 1
+            }).then((res) => {
+                // let cartsCopy = JSON.parse(JSON.stringify(this.state.carts))
+                // //make changes to ingredients
+                // cartsCopy[key].amount = this.state.carts[key].amount - 1//whatever new ingredients are
+                // this.setState({
+                //     carts: cartsCopy
+                // })
+                console.log("deduct")
+            }).catch((error) => {
+                console.log("error deducted", error)
+            })
+            firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                console.log(snap.val())
+                const data = snap.val()
+                if (data != null) {
+                    this.setState({
+                        carts: snap.val(),
+                        submit: true
+                    });
+                    //this.ifAllow();
+                }
+                else {
+                    this.setState({
+                        carts: [],
+                        submit: false,
+                        //allow: true
+                    })
+                }
+            })
+        }
+
     }
 
 
@@ -175,7 +189,7 @@ export default class myCart extends Component {
             console.log("error deducted", error)
         })
         //this.redirect(uid)
-        firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
             console.log(snap.val())
             const data = snap.val()
             if (data != null) {
@@ -214,39 +228,39 @@ export default class myCart extends Component {
 
     snack() {
         if (this.state.snack) {
-            if (this.state.message) {
-                return (<View><Snackbar
-                    style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+            // if (this.state.message) {
+            //     return (<View><Snackbar
+            //         style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+            //         visible={this.state.snack}
+            //         onDismiss={() => this.setState({ snack: false })}
+            //         action={{
+            //             label: 'Yeah!',
+            //             onPress: () => {
+            //                 this.setState({ snack: false })
+            //             },
+            //         }}
+            //     >
+            //         Your purchase is successful <Emoji name="two_hearts" />
+            //     </Snackbar>
+            //     </View>)
+            // }
+            // else {
+            return (<View>
+                <Snackbar
+                    style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'Yeah!',
+                        label: 'Got it',
                         onPress: () => {
                             this.setState({ snack: false })
                         },
                     }}
                 >
-                    Your purchase is successful <Emoji name="two_hearts" />
-                </Snackbar>
-                </View>)
-            }
-            else {
-                return (<View>
-                    <Snackbar
-                        style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
-                        visible={this.state.snack}
-                        onDismiss={() => this.setState({ snack: false })}
-                        action={{
-                            label: 'Got it',
-                            onPress: () => {
-                                this.setState({ snack: false })
-                            },
-                        }}
-                    >
-                        Sorry! Can't make purchase.
+                    Exceed our stock
                     </Snackbar>
-                </View>)
-            }
+            </View>)
+            // }
         }
 
     }
@@ -318,13 +332,13 @@ export default class myCart extends Component {
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.deductItems(
-                            key)}>
+                            key, this.state.carts[key].amount)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> - </Text>
                         </TouchableOpacity>
                         {/* <TextInput style={{ width: 40, height: 40, marginRight: 5 }} value={this.state.carts[key].amount.toString()}></TextInput> */}
                         <Text styles={{ marginRight: 10, fontSize: 15 }}>{this.state.carts[key].amount}</Text>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.addItems(
-                            key)}>
+                            key, this.state.carts[key].amount)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
                         <View>
@@ -342,14 +356,14 @@ export default class myCart extends Component {
         }
     }
 
-    redirect(status) {
+    redirect(status, index, length) {
         const { navigate } = this.props.navigation;
         // alert('Welcome! ' + this.state.email)
         if (status == 'notallow') {
-            navigate('Submit', { status: false })
+            navigate('Submit', { status: false, index: index, length: length })
         }
         if (status == 'allow') {
-            navigate('Submit', { status: true })
+            navigate('Submit', { status: true, index: index, length: length })
         }
     }
 
@@ -357,23 +371,27 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            await firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+            await firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const cartsdata = snap.val()
                 Object.keys(cartsdata).map(async (key, index) => {
                     const booksamount = cartsdata[key].amount
-                    const allow2 = await firebase.database().ref('books/' + key).on('value', (snap2) => {
+                    const allow2 = await firebase.database().ref('books/' + key).once('value', (snap2) => {
                         var res;
                         const booksdata = snap2.val()
                         const booksstock = booksdata.stock
                         console.log("booksamount", booksamount)
                         console.log("boksstock", booksstock)
+                        console.log("amountleb", Object.keys(cartsdata).length)
                         if (booksamount > booksstock) {
-                            this.redirect('notallow')
+                            this.redirect('notallow', index, Object.keys(cartsdata).length)
                             // res = 'false'
                             // allow.push(res)
                             // //this.setState({ allow: false })
                             // console.log("allow false inner", allow)
+                        }
+                        else {
+                            this.redirect('allow', index, Object.keys(cartsdata).length)
                         }
 
                         // console.log("akkiwad", allow)
@@ -384,7 +402,6 @@ export default class myCart extends Component {
                     //console.log("state", this.state.allow)
                 })
             });
-            this.redirect('allow')
         }
     }
 
@@ -449,6 +466,7 @@ export default class myCart extends Component {
                         {this.renderCarts()}
                         {this.CalTotal()}
                         {this.renderSubmitButton()}
+                        {this.snack()}
                     </View>
                 </View>
             </ScrollView>

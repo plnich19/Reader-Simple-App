@@ -19,6 +19,8 @@ export default class Submit extends Component {
     componentWillMount() {
         const { params } = this.props.navigation.state;
         const status = params ? params.status : null;
+        const index = params ? params.index : null;
+        const length = params ? params.length : null;
         console.log('status', status)
         this.setState({ status: status })
     }
@@ -26,14 +28,21 @@ export default class Submit extends Component {
     renderText = () => {
         const { params } = this.props.navigation.state;
         const status = params ? params.status : null;
-        if (status) {
-            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="tada" style={{ fontSize: 50, justifyContent: 'center' }} />
-                <Text style={styles.notfound}>Thank you for Your Purchase!</Text></View>)
-        }
-        else {
-            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="disappointed_relieved" style={{ fontSize: 50 }} />
-                <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done {this.state.status}</Text></View>)
-        }
+        const index = params ? params.index : null;
+        const length = params ? params.length : null;
+        console.log('status', status)
+        console.log("index", index)
+        console.log("l", length)
+        // if (index == length - 1) {
+        // if (status) {
+        return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="tada" style={{ fontSize: 50, justifyContent: 'center' }} />
+            <Text style={styles.notfound}>Thank you for Your Purchase!</Text></View>)
+        // }
+        // else {
+        //     return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="disappointed_relieved" style={{ fontSize: 50 }} />
+        //         <Text style={styles.notfound}>Oops! Sorry. Purchase can't not be done Plaase check your cart again</Text></View>)
+        // }
+        // }
     }
 
     render() {
