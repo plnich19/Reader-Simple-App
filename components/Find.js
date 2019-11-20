@@ -60,7 +60,7 @@ export default class Find extends Component {
             <ScrollView>
                 <Navigation />
                 <View style={styles.hotbar}>
-                    <Text style={styles.choicename}><Emoji name="mag" style={{ fontSize: 20 }} />Results for "{search}"</Text>
+                    <Text style={styles.choicename}><Emoji name="mag" style={{ fontSize: 20 }} /> Results for "{search}"</Text>
                     <View style={styles.bookpanel}>
                         {this.renderBooks(array)}
                     </View>

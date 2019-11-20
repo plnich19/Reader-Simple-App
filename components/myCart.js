@@ -97,32 +97,41 @@ export default class myCart extends Component {
         }
     }
 
-    addItems(key) {
+    addItems(key, amountnow) {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
-        firebase.database().ref('user/' + uid + '/cart/' + key).update({
-            amount: this.state.carts[key].amount + 1
-        }).then((res) => {
-            console.log("added")
-        }).catch((error) => {
-            console.log("error added", error)
-        })
-        firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-            console.log(snap.val())
-            const data = snap.val()
-            if (data != null) {
-                this.setState({
-                    carts: snap.val(),
-                    submit: true
-                });
-                //this.ifAllow();
+        firebase.database().ref('books/' + key).once('value', (snap2) => {
+            const stock = snap2.val().stock;
+            if (amountnow < parseInt(stock)) {
+                firebase.database().ref('user/' + uid + '/cart/' + key).update({
+                    amount: this.state.carts[key].amount + 1
+                }).then((res) => {
+                    console.log("added")
+                }).catch((error) => {
+                    console.log("error added", error)
+                })
+                firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+                    console.log(snap.val())
+                    const data = snap.val()
+                    if (data != null) {
+                        this.setState({
+                            carts: snap.val(),
+                            submit: true
+                        });
+                        //this.ifAllow();
+                    }
+                    else {
+                        this.setState({
+                            carts: [],
+                            submit: false,
+                            //allow: true
+                        })
+                    }
+                })
             }
             else {
-                this.setState({
-                    carts: [],
-                    submit: false,
-                    //allow: true
-                })
+                console.log("notupdate")
+                this.setState({ snack: true })
             }
         })
     }
@@ -219,39 +228,39 @@ export default class myCart extends Component {
 
     snack() {
         if (this.state.snack) {
-            if (this.state.message) {
-                return (<View><Snackbar
-                    style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+            // if (this.state.message) {
+            //     return (<View><Snackbar
+            //         style={{ justifyContent: 'space-between', backgroundColor: '#00B461' }}
+            //         visible={this.state.snack}
+            //         onDismiss={() => this.setState({ snack: false })}
+            //         action={{
+            //             label: 'Yeah!',
+            //             onPress: () => {
+            //                 this.setState({ snack: false })
+            //             },
+            //         }}
+            //     >
+            //         Your purchase is successful <Emoji name="two_hearts" />
+            //     </Snackbar>
+            //     </View>)
+            // }
+            // else {
+            return (<View>
+                <Snackbar
+                    style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
                     visible={this.state.snack}
                     onDismiss={() => this.setState({ snack: false })}
                     action={{
-                        label: 'Yeah!',
+                        label: 'Got it',
                         onPress: () => {
                             this.setState({ snack: false })
                         },
                     }}
                 >
-                    Your purchase is successful <Emoji name="two_hearts" />
-                </Snackbar>
-                </View>)
-            }
-            else {
-                return (<View>
-                    <Snackbar
-                        style={{ justifyContent: 'space-between', backgroundColor: '#B20000' }}
-                        visible={this.state.snack}
-                        onDismiss={() => this.setState({ snack: false })}
-                        action={{
-                            label: 'Got it',
-                            onPress: () => {
-                                this.setState({ snack: false })
-                            },
-                        }}
-                    >
-                        Sorry! Can't make purchase.
+                    Exceed our stock
                     </Snackbar>
-                </View>)
-            }
+            </View>)
+            // }
         }
 
     }
@@ -329,7 +338,7 @@ export default class myCart extends Component {
                         {/* <TextInput style={{ width: 40, height: 40, marginRight: 5 }} value={this.state.carts[key].amount.toString()}></TextInput> */}
                         <Text styles={{ marginRight: 10, fontSize: 15 }}>{this.state.carts[key].amount}</Text>
                         <TouchableOpacity style={styles.adddeductbutton} onPress={() => this.addItems(
-                            key)}>
+                            key, this.state.carts[key].amount)}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}> + </Text>
                         </TouchableOpacity>
                         <View>
@@ -457,6 +466,7 @@ export default class myCart extends Component {
                         {this.renderCarts()}
                         {this.CalTotal()}
                         {this.renderSubmitButton()}
+                        {this.snack()}
                     </View>
                 </View>
             </ScrollView>
