@@ -466,8 +466,8 @@ export default class myCart extends Component {
                         {this.renderCarts()}
                         {this.CalTotal()}
                         {this.renderSubmitButton()}
-                        {this.snack()}
                     </View>
+                    {this.snack()}
                 </View>
             </ScrollView>
         );
