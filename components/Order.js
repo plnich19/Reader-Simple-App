@@ -59,7 +59,7 @@ export default class Order extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            firebase.database().ref('user/' + uid + '/order/').once('value', (snap) => {
+            firebase.database().ref('user/' + uid + '/order/').on('value', (snap) => {
                 const data = snap.val()
                 if (data != null) {
                     this.setState({

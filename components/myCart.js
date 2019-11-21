@@ -7,7 +7,7 @@ import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import Navigation from './Navigation.js';
 import fixtimerbuf from '../fixtimerbug.js';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export default class myCart extends Component {
     constructor(props) {
