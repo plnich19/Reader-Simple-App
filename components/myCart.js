@@ -6,6 +6,7 @@ import _ from 'lodash';
 import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import Navigation from './Navigation.js';
+import fixtimerbuf from '../fixtimerbug.js';
 
 export default class myCart extends Component {
     constructor(props) {
@@ -70,6 +71,7 @@ export default class myCart extends Component {
     componentDidMount() {
         this.listenForAuthChange();
         this.listenForCartChange();
+
         //this.ifAllow()
     }
 
@@ -83,7 +85,6 @@ export default class myCart extends Component {
             //     console.log("User details", userinfo);
             // this.setState({ uid: uid }, () => {
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-                console.log(snap.val())
                 const data = snap.val()
                 if (data != null) {
                     this.setState({
@@ -92,8 +93,7 @@ export default class myCart extends Component {
                     });
                 }
             });
-            // })
-            //this.ifAllow()
+            //     //this.ifAllow()
         }
     }
 
@@ -298,6 +298,25 @@ export default class myCart extends Component {
 
 
     renderCarts() {
+        // const { params } = this.props.navigation.state;
+        // const uid = params ? params.uid : null;
+        // if (uid != null) {
+        //     // var userinfo = firebase.auth().currentUser;
+        //     // if (userinfo != null) {
+        //     //     var uid = userinfo.uid;
+        //     //     console.log("User details", userinfo);
+        //     // this.setState({ uid: uid }, () => {
+        //     firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+        //         const data = snap.val()
+        //         if (data != null) {
+        //             this.setState({
+        //                 carts: data,
+        //                 submit: true
+        //             });
+        //         }
+        //     });
+        //     //     //this.ifAllow()
+        // }
 
         console.log("caetttttttt", this.state.carts);
         let carts = [];
@@ -433,7 +452,7 @@ export default class myCart extends Component {
             total = total + (carts[key].price * carts[key].amount);
         })
         if (total > 0) {
-            return (<View style={{ flexWrap: 'wrap', flex: 'column' }}>
+            return (<View>
                 <View style={{ marginLeft: 10, width: '40%' }}>
                     <Button color="#7BA7B2" icon="cart-off" mode="outlined" onPress={() => this.deleteCarts()}>
                         Empty Cart</Button>
