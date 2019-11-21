@@ -93,7 +93,7 @@ export default class Order extends Component {
                         <View style={{ width: 270 }}>
                             <Text style={styles.title}>{this.state.orders[key].order[obj].nameth} by {this.state.orders[key].order[obj].author}</Text>
                         </View>
-                        <View>
+                        <View style={{ marginTop: 2 }}>
                             <Text style={styles.title}>{this.state.orders[key].order[obj].amount}</Text>
                         </View>
                     </View>)
@@ -172,14 +172,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'grey',
         paddingBottom: 10,
-        paddingLeft: 10
+        paddingLeft: 10,
+        paddingTop: 10
     },
     author2: {
         fontSize: 14,
         fontWeight: 'bold',
         color: '#AF00FF',
         paddingBottom: 10,
-        paddingLeft: 10
+        paddingLeft: 10,
+        paddingTop: 10
     },
     price: {
         fontSize: 14,
