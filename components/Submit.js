@@ -21,8 +21,14 @@ export default class Submit extends Component {
         const status = params ? params.status : null;
         const index = params ? params.index : null;
         const length = params ? params.length : null;
+        const uid = params ? params.uid : null;
         console.log('status', status)
         this.setState({ status: status })
+        // firebase.database().ref('user/' + uid + '/cart/').remove().then(function (data) {
+        //     console.log("delete cart")
+        // }).catch((error) => {
+        //     console.log("error deducted", error)
+        // })
     }
 
     renderText = () => {

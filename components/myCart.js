@@ -6,6 +6,8 @@ import _ from 'lodash';
 import config from '../firebase/config.js';
 import Emoji from 'react-native-emoji';
 import Navigation from './Navigation.js';
+import fixtimerbuf from '../fixtimerbug.js';
+import * as moment from 'moment';
 
 export default class myCart extends Component {
     constructor(props) {
@@ -70,6 +72,7 @@ export default class myCart extends Component {
     componentDidMount() {
         this.listenForAuthChange();
         this.listenForCartChange();
+
         //this.ifAllow()
     }
 
@@ -83,7 +86,6 @@ export default class myCart extends Component {
             //     console.log("User details", userinfo);
             // this.setState({ uid: uid }, () => {
             firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
-                console.log(snap.val())
                 const data = snap.val()
                 if (data != null) {
                     this.setState({
@@ -92,8 +94,7 @@ export default class myCart extends Component {
                     });
                 }
             });
-            // })
-            //this.ifAllow()
+            //     //this.ifAllow()
         }
     }
 
@@ -298,6 +299,25 @@ export default class myCart extends Component {
 
 
     renderCarts() {
+        // const { params } = this.props.navigation.state;
+        // const uid = params ? params.uid : null;
+        // if (uid != null) {
+        //     // var userinfo = firebase.auth().currentUser;
+        //     // if (userinfo != null) {
+        //     //     var uid = userinfo.uid;
+        //     //     console.log("User details", userinfo);
+        //     // this.setState({ uid: uid }, () => {
+        //     firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
+        //         const data = snap.val()
+        //         if (data != null) {
+        //             this.setState({
+        //                 carts: data,
+        //                 submit: true
+        //             });
+        //         }
+        //     });
+        //     //     //this.ifAllow()
+        // }
 
         console.log("caetttttttt", this.state.carts);
         let carts = [];
@@ -322,7 +342,6 @@ export default class myCart extends Component {
                         <Text style={styles.title} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].nameth}</Text>
                         <Text style={styles.author} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].author}</Text>
                         <Text style={styles.price} onPress={() => this.props.navigation.navigate('BookDetail', { key: key })}>{this.state.carts[key].price} Baht</Text>
-
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', alignContent: 'center' }}>
                         <View>
@@ -346,16 +365,13 @@ export default class myCart extends Component {
                                 key)}>
                                 <Text style={{ fontWeight: 'bold', color: 'grey' }}> x </Text>
                             </TouchableOpacity> */}
-
                         </View>
                     </View>
                 </View>)
-
             })
             return carts;
         }
     }
-
     redirect(status, index, length) {
         const { navigate } = this.props.navigation;
         // alert('Welcome! ' + this.state.email)
@@ -366,7 +382,6 @@ export default class myCart extends Component {
             navigate('Submit', { status: true, index: index, length: length })
         }
     }
-
     purchaseAllow = async () => {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
@@ -374,8 +389,11 @@ export default class myCart extends Component {
             await firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const cartsdata = snap.val()
+                let total = 0;
                 Object.keys(cartsdata).map(async (key, index) => {
+                    total = total + (cartsdata[key].price * cartsdata[key].amount);
                     const booksamount = cartsdata[key].amount
+
                     const allow2 = await firebase.database().ref('books/' + key).once('value', (snap2) => {
                         var res;
                         const booksdata = snap2.val()
@@ -393,27 +411,28 @@ export default class myCart extends Component {
                         else {
                             this.redirect('allow', index, Object.keys(cartsdata).length)
                         }
-
                         // console.log("akkiwad", allow)
                         // this.setState({ allow: allow })
                         // return allow;
-
                     })
                     //console.log("state", this.state.allow)
+                })
+                let now = moment().format('MMMM Do YYYY, h:mm:ss a');
+                firebase.database().ref('user/' + uid + '/order/').push({
+                    order: cartsdata,
+                    total: total,
+                    time: now
                 })
             });
         }
     }
-
     ifAllow = async () => {
         this.purchaseAllow().then(() => {
             if (this.state.allow.length > 0) {
                 if (this.state.allow.includes('false')) {
                     this.setState({ status: 'notallow' })
-
                     console.log("stuck")
                     // this.redirect(status)
-
                 }
                 else if (!this.state.allow.includes('false')) {
                     this.setState({ status: 'allow' })
@@ -423,9 +442,7 @@ export default class myCart extends Component {
             }
         })
     }
-
     // Total
-
     CalTotal() {
         let total = 0;
         let carts = this.state.carts;
@@ -433,7 +450,7 @@ export default class myCart extends Component {
             total = total + (carts[key].price * carts[key].amount);
         })
         if (total > 0) {
-            return (<View style={{ flexWrap: 'wrap', flex: 'column' }}>
+            return (<View>
                 <View style={{ marginLeft: 10, width: '40%' }}>
                     <Button color="#7BA7B2" icon="cart-off" mode="outlined" onPress={() => this.deleteCarts()}>
                         Empty Cart</Button>
@@ -446,7 +463,6 @@ export default class myCart extends Component {
             return;
         }
     }
-
     renderSubmitButton() {
         if (this.state.submit) {
             return (<View style={{ marginLeft: 25, marginRight: 25, marginTop: 25 }} >
@@ -455,7 +471,6 @@ export default class myCart extends Component {
                 </Button></View>)
         }
     }
-
     render() {
         return (
             <ScrollView>
@@ -473,7 +488,6 @@ export default class myCart extends Component {
         );
     }
 }
-
 const styles = StyleSheet.create({
     hotbar: {
         flex: 1,
@@ -554,5 +568,4 @@ const styles = StyleSheet.create({
         marginRight: 30,
         marginBottom: 30
     }
-
 })

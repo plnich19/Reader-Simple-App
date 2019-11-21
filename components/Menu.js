@@ -108,6 +108,7 @@ export default class Menu extends Component {
         if (this.state.login) {
             return (<View>
                 <TouchableOpacity ><Text style={styles.loginbuttontext} onPress={() => this.props.navigation.navigate('myCart', { uid: this.state.uid })}>My Cart</Text></TouchableOpacity>
+                <TouchableOpacity ><Text style={styles.loginbuttontext} onPress={() => this.props.navigation.navigate('Order', { uid: this.state.uid })}>Orders</Text></TouchableOpacity>
                 <TouchableOpacity onPress={this.logout}><Text style={styles.loginbuttontext}>Logout</Text></TouchableOpacity></View>)
         }
         else {

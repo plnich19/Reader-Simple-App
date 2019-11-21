@@ -14,7 +14,7 @@ import Login from './components/Login.js';
 import Find from './components/Find.js';
 import myCart from './components/myCart.js';
 import Submit from './components/Submit.js'
-
+import Order from './components/Order.js'
 //const store = createStore(productReducer, applyMiddleware(logger));
 
 const AppNavigator = createStackNavigator({
@@ -24,7 +24,7 @@ const AppNavigator = createStackNavigator({
   Find: Find,
   myCart: myCart,
   Submit: Submit,
-
+  Order: Order
 },
   {
     initialRouteName: 'Home',
