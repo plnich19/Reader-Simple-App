@@ -393,32 +393,32 @@ export default class myCart extends Component {
         const { params } = this.props.navigation.state;
         const uid = params ? params.uid : null;
         if (uid != null) {
-            await firebase.database().ref('user/' + uid + '/cart/').on('value', (snap) => {
+            let total = 0;
+            await firebase.database().ref('user/' + uid + '/cart/').once('value', (snap) => {
                 console.log(snap.val())
                 const cartsdata = snap.val()
-                let total = 0;
+
                 Object.keys(cartsdata).map(async (key, index) => {
                     total = total + (cartsdata[key].price * cartsdata[key].amount);
-                    const booksamount = cartsdata[key].amount
-
-                    const allow2 = await firebase.database().ref('books/' + key).on('value', (snap2) => {
-                        var res;
-                        const booksdata = snap2.val()
-                        const booksstock = booksdata.stock
-                        console.log("booksamount", booksamount)
-                        console.log("boksstock", booksstock)
-                        console.log("amountleb", Object.keys(cartsdata).length)
-                        // if (booksamount > booksstock) {
-                        //     this.redirect('notallow', index, Object.keys(cartsdata).length)
-                        //     // res = 'false'
-                        //     // allow.push(res)
-                        //     // //this.setState({ allow: false })
-                        //     // console.log("allow false inner", allow)
-                        // }
-                        // console.log("akkiwad", allow)
-                        // this.setState({ allow: allow })
-                        // return allow;
-                    })
+                    // const booksamount = cartsdata[key].amount
+                    // const allow2 = await firebase.database().ref('books/' + key).on('value', (snap2) => {
+                    //     var res;
+                    //     const booksdata = snap2.val()
+                    //     const booksstock = booksdata.stock
+                    //     console.log("booksamount", booksamount)
+                    //     console.log("boksstock", booksstock)
+                    //     console.log("amountleb", Object.keys(cartsdata).length)
+                    //     // if (booksamount > booksstock) {
+                    //     //     this.redirect('notallow', index, Object.keys(cartsdata).length)
+                    //     //     // res = 'false'
+                    //     //     // allow.push(res)
+                    //     //     // //this.setState({ allow: false })
+                    //     //     // console.log("allow false inner", allow)
+                    //     // }
+                    //     // console.log("akkiwad", allow)
+                    //     // this.setState({ allow: allow })
+                    //     // return allow;
+                    // })
                     //console.log("state", this.state.allow)
                 })
                 let now = moment().format('MMMM Do YYYY, h:mm:ss a');
@@ -427,6 +427,7 @@ export default class myCart extends Component {
                     total: total,
                     time: now
                 })
+                // return cartsdata, total;
             });
         }
         this.redirect('allow')
