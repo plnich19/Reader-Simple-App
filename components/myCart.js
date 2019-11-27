@@ -9,7 +9,9 @@ import Navigation from './Navigation.js';
 import fixtimerbuf from '../fixtimerbug.js';
 import moment from 'moment';
 
+
 export default class myCart extends Component {
+    _isMounted = false;
     constructor(props) {
         super(props);
         if (!firebase.apps.length) {
@@ -70,6 +72,7 @@ export default class myCart extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.listenForAuthChange();
         this.listenForCartChange();
 
@@ -96,6 +99,10 @@ export default class myCart extends Component {
             });
             //     //this.ifAllow()
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     addItems(key, amountnow) {
@@ -372,14 +379,14 @@ export default class myCart extends Component {
             return carts;
         }
     }
-    redirect(status, index, length) {
+    redirect(status) {
         const { navigate } = this.props.navigation;
         // alert('Welcome! ' + this.state.email)
-        if (status == 'notallow') {
-            navigate('Submit', { status: false, index: index, length: length })
-        }
+        // if (status == 'notallow') {
+        //     navigate('Submit', { status: false, index: index, length: length })
+        // }
         if (status == 'allow') {
-            navigate('Submit', { status: true, index: index, length: length })
+            navigate('Submit')
         }
     }
     purchaseAllow = async () => {
@@ -401,16 +408,13 @@ export default class myCart extends Component {
                         console.log("booksamount", booksamount)
                         console.log("boksstock", booksstock)
                         console.log("amountleb", Object.keys(cartsdata).length)
-                        if (booksamount > booksstock) {
-                            this.redirect('notallow', index, Object.keys(cartsdata).length)
-                            // res = 'false'
-                            // allow.push(res)
-                            // //this.setState({ allow: false })
-                            // console.log("allow false inner", allow)
-                        }
-                        else {
-                            this.redirect('allow', index, Object.keys(cartsdata).length)
-                        }
+                        // if (booksamount > booksstock) {
+                        //     this.redirect('notallow', index, Object.keys(cartsdata).length)
+                        //     // res = 'false'
+                        //     // allow.push(res)
+                        //     // //this.setState({ allow: false })
+                        //     // console.log("allow false inner", allow)
+                        // }
                         // console.log("akkiwad", allow)
                         // this.setState({ allow: allow })
                         // return allow;
@@ -425,23 +429,24 @@ export default class myCart extends Component {
                 })
             });
         }
+        this.redirect('allow')
     }
-    ifAllow = async () => {
-        this.purchaseAllow().then(() => {
-            if (this.state.allow.length > 0) {
-                if (this.state.allow.includes('false')) {
-                    this.setState({ status: 'notallow' })
-                    console.log("stuck")
-                    // this.redirect(status)
-                }
-                else if (!this.state.allow.includes('false')) {
-                    this.setState({ status: 'allow' })
-                    console.log("ok", this.state.allow)
-                }
-                console.log("this2", this.state.status)
-            }
-        })
-    }
+    // ifAllow = async () => {
+    //     this.purchaseAllow().then(() => {
+    //         if (this.state.allow.length > 0) {
+    //             if (this.state.allow.includes('false')) {
+    //                 this.setState({ status: 'notallow' })
+    //                 console.log("stuck")
+    //                 // this.redirect(status)
+    //             }
+    //             else if (!this.state.allow.includes('false')) {
+    //                 this.setState({ status: 'allow' })
+    //                 console.log("ok", this.state.allow)
+    //             }
+    //             console.log("this2", this.state.status)
+    //         }
+    //     })
+    // }
     // Total
     CalTotal() {
         let total = 0;
