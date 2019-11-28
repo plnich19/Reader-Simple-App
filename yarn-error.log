@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js remove react-redux
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add moment
 
 PATH: 
   C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Git\cmd;C:\Users\ployu\AppData\Local\Microsoft\WindowsApps;C:\Users\ployu\AppData\Roaming\npm;C:\Users\ployu\AppData\Local\Yarn\bin;C:\Users\ployu\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ployu\AppData\Local\GitHubDesktop\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\ployu\Documents\Reader-Simple-App\node_modules\react-redux\node_modules'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\ployu\Documents\Reader-Simple-App\node_modules\@google-cloud\common\build\src'
 
 npm manifest: 
   {
@@ -43,6 +43,7 @@ npm manifest:
       "react-native-web": "^0.11.7",
       "react-navigation": "^4.0.10",
       "react-navigation-stack": "^1.10.3",
+      "react-redux": "^7.1.3",
       "redux": "^4.0.4",
       "redux-logger": "^3.0.6"
     },

@@ -19,7 +19,7 @@ export default class Find extends Component {
     renderBooks(isbn, search) {
         let panel = [];
         if (isbn.length == 0) {
-            return (<View style={{ justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}><Text style={styles.notfound}>Sorry We don't have that book right now. :(</Text></View>);
+            return (<View style={{ flex: 1 }}><Text style={styles.notfound}>Sorry We don't have that book right now. :(</Text></View>);
         }
         isbn.map((key) => {
             Object.keys(key).map(obj =>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     notfound: {
         marginTop: 30,
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: 'bold',
         marginBottom: 30
     },

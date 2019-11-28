@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { withNavigation } from 'react-navigation';
 import { TextInput, Button, Snackbar } from 'react-native-paper'
 import Emoji from 'react-native-emoji';
 import * as firebase from 'firebase';
@@ -12,27 +11,34 @@ export default class Submit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ''
+            status: '',
+            bug: null
         }
     }
 
-    componentWillMount() {
-        const { params } = this.props.navigation.state;
-        const status = params ? params.status : null;
-        const index = params ? params.index : null;
-        const length = params ? params.length : null;
-        console.log('status', status)
-        this.setState({ status: status })
-    }
+    // componentWillMount() {
+    //     const { params } = this.props.navigation.state;
+    //     const status = params ? params.status : null;
+    //     const index = params ? params.index : null;
+    //     const length = params ? params.length : null;
+    //     const uid = params ? params.uid : null;
+    //     console.log('status', status)
+    //     this.setState({ status: status })
+    //     // firebase.database().ref('user/' + uid + '/cart/').remove().then(function (data) {
+    //     //     console.log("delete cart")
+    //     // }).catch((error) => {
+    //     //     console.log("error deducted", error)
+    //     // })
+    // }
 
     renderText = () => {
-        const { params } = this.props.navigation.state;
-        const status = params ? params.status : null;
-        const index = params ? params.index : null;
-        const length = params ? params.length : null;
-        console.log('status', status)
-        console.log("index", index)
-        console.log("l", length)
+        // const { params } = this.props.navigation.state;
+        // const status = params ? params.status : null;
+        // const index = params ? params.index : null;
+        // const length = params ? params.length : null;
+        // console.log('status', status)
+        // console.log("index", index)
+        // console.log("l", length)
         // if (index == length - 1) {
         // if (status) {
         return (<View style={{ justifyContent: 'center', alignItems: 'center' }}><Emoji name="tada" style={{ fontSize: 50, justifyContent: 'center' }} />
@@ -46,9 +52,9 @@ export default class Submit extends Component {
     }
 
     render() {
-        const { params } = this.props.navigation.state;
-        const status = params ? params.status : null;
-        console.log('status', status)
+        // const { params } = this.props.navigation.state;
+        // const status = params ? params.status : null;
+        // console.log('status', status)
 
         return (
             <ScrollView>
